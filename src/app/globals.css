@@ -1,26 +1,143 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #faf5ee;
+    --foreground: #3a302a;
+    --surface: #f6f0e8;
+    --surface-low: #f2ece4;
+    --surface-card: #ece6dc;
+    --surface-elevated: #ffffff;
+    --primary: #c2652a;
+    --primary-hover: #a8521e;
+    --primary-dim: #f0a878;
+    --primary-soft: #fbe8d8;
+    --tertiary: #8c3c3c;
+    --tertiary-soft: #f9ecea;
+    --charcoal: #3a302a;
+    --charcoal-secondary: #605850;
+    --charcoal-muted: #8c827a;
+    --border-warm: rgba(216, 208, 200, 0.5);
   }
 }
 
+@theme {
+  --font-serif: var(--font-garamond), "EB Garamond", Georgia, serif;
+  --font-sans: var(--font-manrope), "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --color-background: #faf5ee;
+  --color-surface: #f6f0e8;
+  --color-surface-low: #f2ece4;
+  --color-surface-card: #ece6dc;
+  --color-surface-elevated: #ffffff;
+
+  --color-primary: #c2652a;
+  --color-primary-hover: #a8521e;
+  --color-primary-dim: #f0a878;
+  --color-primary-soft: #fbe8d8;
+
+  --color-tertiary: #8c3c3c;
+  --color-tertiary-soft: #f9ecea;
+
+  --color-charcoal: #3a302a;
+  --color-charcoal-secondary: #605850;
+  --color-charcoal-muted: #8c827a;
+
+  --color-border-warm: #d8d0c8;
+}
+
+html {
+  background-color: #faf5ee;
+  color: #3a302a;
+  scroll-behavior: smooth;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #faf5ee;
+  color: #3a302a;
+  font-family: var(--font-manrope), "Manrope", sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography styles */
+h1, h2, h3, .font-display {
+  font-family: var(--font-garamond), "EB Garamond", Georgia, serif;
+  letter-spacing: -0.015em;
+  line-height: 1.08;
+}
+
+/* Selection Color */
+::selection {
+  background-color: #fbe8d8;
+  color: #3a302a;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #faf5ee;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d8d0c8;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c2652a;
+}
+
+/* Warm Glass & Lighting Utilities */
+.glass-warm {
+  background: rgba(250, 245, 238, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(216, 208, 200, 0.45);
+}
+
+.glass-card {
+  background: rgba(246, 240, 232, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(216, 208, 200, 0.4);
+}
+
+.glass-dark {
+  background: rgba(46, 38, 33, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(240, 168, 120, 0.15);
+}
+
+/* Warm ambient lighting */
+.ambient-glow {
+  background: radial-gradient(circle at 50% 30%, rgba(240, 168, 120, 0.18) 0%, rgba(250, 245, 238, 0) 70%);
+}
+
+.ambient-glow-tertiary {
+  background: radial-gradient(circle at 70% 40%, rgba(140, 60, 60, 0.08) 0%, rgba(250, 245, 238, 0) 65%);
+}
+
+/* Subtle Warm Card Shadows */
+.shadow-warm-sm {
+  box-shadow: 0 2px 10px rgba(58, 48, 42, 0.035);
+}
+
+.shadow-warm-md {
+  box-shadow: 0 6px 24px -2px rgba(58, 48, 42, 0.05);
+}
+
+.shadow-warm-lg {
+  box-shadow: 0 16px 40px -6px rgba(58, 48, 42, 0.07);
+}
+
+.shadow-warm-glow {
+  box-shadow: 0 8px 30px rgba(194, 101, 42, 0.15);
 }

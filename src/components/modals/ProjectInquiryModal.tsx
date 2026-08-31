@@ -72,13 +72,30 @@ export function ProjectInquiryModal() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setTimeout(() => {
+    try {
+      await fetch("/api/inquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          company: formData.company,
+          details: formData.details,
+          service,
+          projectType,
+          budget,
+          timeline,
+        }),
+      });
+    } catch (err) {
+      console.error("Failed to submit inquiry:", err);
+    } finally {
       setIsSubmitting(false);
       setIsSuccess(true);
-    }, 1000);
+    }
   };
 
   return (

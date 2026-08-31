@@ -24,9 +24,30 @@ export function ServeQDemoModal() {
     "Thursday, 3:00 PM EST",
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitted(true);
+    setIsSubmitting(true);
+    try {
+      await fetch("/api/demo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: demoForm.name,
+          email: demoForm.email,
+          company: demoForm.company,
+          teamSize: demoForm.teamSize,
+          selectedSlot,
+          selectedTier,
+        }),
+      });
+    } catch (err) {
+      console.error("Failed to submit demo request:", err);
+    } finally {
+      setIsSubmitting(false);
+      setIsSubmitted(true);
+    }
   };
 
   return (

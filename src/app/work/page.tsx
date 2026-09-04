@@ -30,7 +30,7 @@ interface ProjectItem {
   title: string;
   clientName: string;
   location?: string;
-  category: "web" | "ecommerce" | "product";
+  category: "web" | "product";
   categoryLabel: string;
   badgeLabel: string;
   tagline: string;
@@ -61,7 +61,6 @@ export default function WorkPage() {
   const filters = [
     { id: "all", label: "All Projects" },
     { id: "web", label: "Client Websites" },
-    { id: "ecommerce", label: "E-commerce" },
     { id: "product", label: "Nexora Products" },
   ];
 
@@ -105,9 +104,9 @@ export default function WorkPage() {
       title: "Rooz Tailors — Bespoke Atelier & Retail Store",
       clientName: "Rooz Tailors Atelier & Clothiers",
       location: "Fontainhas, Panjim, Goa",
-      category: "ecommerce",
+      category: "web",
       categoryLabel: "Bespoke Sartorial & Luxury Retail",
-      badgeLabel: "LIVE CLIENT E-COMMERCE",
+      badgeLabel: "LIVE CLIENT WEBSITE",
       tagline: "Savile Row precision meets Malabar craftsmanship in historic Fontainhas.",
       description:
         "Luxury bespoke tailoring and ready-to-wear retail e-commerce platform. Features an interactive 36-point body drafting configurator, custom suit customizer with natural floating horsehair canvas, curated ready-to-wear seasonal collections, luxury fabric explorer (5,000+ Italian & British mills), and VIP master fitting studio appointments.",
@@ -132,7 +131,7 @@ export default function WorkPage() {
       ],
       icon: ShoppingCart,
       featured: true,
-      demoLink: "https://tailoring-rho.vercel.app/",
+      demoLink: "https://www.rooztextile.co.in/",
     },
     {
       id: "serveq",

@@ -1,10 +1,39 @@
 import { NextResponse } from "next/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, email, company, service, projectType, budget, timeline, details } = body;
+    const {
+      name,
+      email,
+      company,
+      service,
+      projectType,
+      budget,
+      timeline,
+      details,
+    } = body;
 
+    // 1. Persist to Supabase Database (project_requests)
+    try {
+      const adminClient = createAdminClient();
+      await adminClient.from("project_requests").insert({
+        name: name || "Anonymous Client",
+        email: email || "unknown@client.com",
+        company: company || null,
+        service_type: service || null,
+        project_type: projectType || null,
+        budget: budget || null,
+        timeline: timeline || null,
+        details: details || null,
+        status: "SUBMITTED",
+      });
+    } catch (dbErr) {
+      console.error("Database save failed in /api/inquiry, continuing with email notification:", dbErr);
+    }
+
+    // 2. Prepare FormSubmit Email Payload
     const payload = {
       _subject: `[Nexora Inquiry] New Lead: ${name || "Client"} (${company || "Individual"})`,
       _replyto: email,
@@ -20,7 +49,7 @@ export async function POST(request: Request) {
       _captcha: "false",
     };
 
-    // Forward to FormSubmit to deliver directly to ayushman.rick007@gmail.com
+    // 3. Forward to FormSubmit to deliver directly to studio inbox
     const response = await fetch("https://formsubmit.co/ajax/ayushman.rick007@gmail.com", {
       method: "POST",
       headers: {

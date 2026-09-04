@@ -223,7 +223,7 @@ export default function HomePage() {
                   <span>pipeline.config.ts</span>
                   <span className="text-emerald-400">● 100% HEALTHY</span>
                 </div>
-                <div className="text-[#d8d0c8]/60">// Automated Next.js & Go microservice mesh</div>
+                <div className="text-[#d8d0c8]/60">&#47;&#47; Automated Next.js &amp; Go microservice mesh</div>
                 <div><span className="text-[#f0a878]">export const</span> runtime = <span className="text-[#c2652a]">&quot;edge&quot;</span>;</div>
                 <div><span className="text-[#f0a878]">const</span> engine = <span className="text-blue-300">new</span> NexoraMesh(&#123;</div>
                 <div className="pl-4">caching: <span className="text-[#c2652a]">&quot;sub-millisecond-redis&quot;</span>,</div>

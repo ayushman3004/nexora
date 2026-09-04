@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import {
@@ -18,13 +18,37 @@ import {
   Server,
   Activity,
   ArrowUpRight,
+  Star,
+  Quote,
 } from "lucide-react";
 import { useModal } from "@/context/ModalContext";
 import { SectionBadge } from "@/components/ui/SectionBadge";
+import { createClient } from "@/lib/supabase/client";
+import type { Review } from "@/types/database";
 
 export default function ProductsPage() {
   const { openModal } = useModal();
   const [activeTicketStatus, setActiveTicketStatus] = useState("all");
+  const [approvedReviews, setApprovedReviews] = useState<Review[]>([]);
+
+  useEffect(() => {
+    async function loadReviews() {
+      try {
+        const supabase = createClient();
+        const { data } = await supabase
+          .from("reviews")
+          .select("*, profiles(name, company)")
+          .eq("status", "APPROVED")
+          .order("created_at", { ascending: false });
+        if (data && data.length > 0) {
+          setApprovedReviews(data as unknown as Review[]);
+        }
+      } catch (err) {
+        console.warn("Could not load approved reviews from database:", err);
+      }
+    }
+    loadReviews();
+  }, []);
 
   const tickets = [
     {
@@ -412,6 +436,63 @@ export default function ProductsPage() {
           </div>
         </div>
       </section>
+
+      {/* ============================================================ */}
+      {/* 3.5 CLIENT PRODUCT REVIEWS (DYNAMIC FROM SUPABASE) */}
+      {/* ============================================================ */}
+      {approvedReviews.length > 0 && (
+        <section className="py-20 md:py-24 border-b border-[#d8d0c8]/60 bg-[#f6f0e8]/50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+            <div className="text-center max-w-3xl mx-auto space-y-4">
+              <SectionBadge icon={Star} variant="primary">
+                VERIFIED REVIEWS
+              </SectionBadge>
+              <h2 className="text-4xl sm:text-5xl font-serif text-[#3a302a]">
+                What our users <span className="italic text-[#c2652a]">experience.</span>
+              </h2>
+              <p className="text-sm sm:text-base text-[#605850]">
+                Live feedback from engineering leaders, product operators, and clients deploying Nexora tools.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {approvedReviews.map((rev) => (
+                <div
+                  key={rev.id}
+                  className="p-8 rounded-3xl bg-white/80 border border-[#d8d0c8]/60 shadow-warm-sm space-y-4 flex flex-col justify-between"
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                          key={star}
+                          className={`w-4 h-4 ${
+                            star <= rev.rating
+                              ? "fill-[#c2652a] text-[#c2652a]"
+                              : "text-[#d8d0c8]"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <p className="text-sm text-[#3a302a] leading-relaxed font-sans italic">
+                      &ldquo;{rev.review}&rdquo;
+                    </p>
+                  </div>
+
+                  <div className="pt-4 border-t border-[#d8d0c8]/40">
+                    <p className="font-serif font-semibold text-sm text-[#3a302a]">
+                      {rev.profiles?.name || "Verified Client"}
+                    </p>
+                    <p className="text-xs text-[#8c827a]">
+                      {rev.profiles?.company || "Enterprise Operator"}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ============================================================ */}
       {/* 4. BOTTOM CTA */}

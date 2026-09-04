@@ -3,11 +3,17 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowUpRight, Sparkles, Mail, Globe, Shield, Terminal } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { ArrowUpRight, Globe } from "lucide-react";
 import { useModal } from "@/context/ModalContext";
 
 export function Footer() {
+  const pathname = usePathname();
   const { openModal } = useModal();
+
+  if (pathname.startsWith("/admin") || pathname.startsWith("/dashboard")) {
+    return null;
+  }
 
   return (
     <footer className="bg-[#f6f0e8] border-t border-[#d8d0c8]/60 text-[#3a302a] relative overflow-hidden">

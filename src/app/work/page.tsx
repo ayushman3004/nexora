@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { createClient } from "@/lib/supabase/client";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -16,14 +17,13 @@ import {
   Maximize2,
   MapPin,
   TrendingUp,
-  ShieldCheck,
-  Zap,
 } from "lucide-react";
 import { useModal } from "@/context/ModalContext";
 import { SectionBadge } from "@/components/ui/SectionBadge";
 import Link from "next/link";
 import { ClientBrowserPreview } from "@/components/work/ClientBrowserPreview";
 import { ClientWebsiteFullscreenModal } from "@/components/work/ClientWebsiteFullscreenModal";
+import type { Project } from "@/types/database";
 
 interface ProjectItem {
   id: string;
@@ -41,7 +41,7 @@ interface ProjectItem {
   tech: string[];
   outcome: string;
   metrics?: { label: string; value: string }[];
-  icon: any;
+  icon: React.ComponentType<{ className?: string }>;
   featured: boolean;
   link?: string;
   demoLink?: string;
@@ -51,12 +51,77 @@ interface ProjectItem {
 export default function WorkPage() {
   const { openModal } = useModal();
   const [activeFilter, setActiveFilter] = useState("all");
+  const [dbProjects, setDbProjects] = useState<ProjectItem[]>([]);
   const [fullscreenProject, setFullscreenProject] = useState<{
     title: string;
     url: string;
     categoryLabel: string;
     tagline?: string;
   } | null>(null);
+
+  useEffect(() => {
+    async function loadPublishedProjects() {
+      try {
+        const supabase = createClient();
+        const { data } = await supabase
+          .from("projects")
+          .select("*")
+          .eq("published", true)
+          .order("created_at", { ascending: false });
+
+        if (data && data.length > 0) {
+          const mapped: ProjectItem[] = (data as Project[]).map((item) => ({
+            id: item.id,
+            title: item.title,
+            clientName: item.title,
+            category: (item.category as "web" | "product") || "web",
+            categoryLabel:
+              item.category === "product"
+                ? "Nexora Product Studio"
+                : "Client Digital Platform",
+            badgeLabel:
+              item.category === "product"
+                ? "NEXORA PRODUCT"
+                : "LIVE CLIENT WEBSITE",
+            tagline:
+              item.description || "High-performance digital engineering by Nexora.",
+            description:
+              item.description ||
+              "A custom engineered digital platform designed for high performance.",
+            challenge:
+              item.case_study?.challenge ||
+              "Scaling modern digital architecture and user acquisition.",
+            solution:
+              item.case_study?.solution ||
+              "Nexora engineered an ultra-fast, mobile-first web architecture.",
+            features:
+              item.case_study?.features ||
+              (item.technologies && item.technologies.length > 0
+                ? item.technologies
+                : ["Responsive Web Architecture", "High-Performance Edge CDN"]),
+            tech:
+              item.technologies && item.technologies.length > 0
+                ? item.technologies
+                : ["Next.js", "TypeScript", "Tailwind CSS"],
+            outcome:
+              item.case_study?.outcome ||
+              "Production deployment with superior performance and user conversion.",
+            metrics: item.case_study?.metrics,
+            icon: item.category === "product" ? Layers : Store,
+            featured: true,
+            demoLink: item.website_url || item.preview_url || undefined,
+            link: item.website_url || undefined,
+            isProduct: item.category === "product",
+          }));
+          setDbProjects(mapped);
+        }
+      } catch (err) {
+        console.warn("Could not load dynamic projects from database, using resilient fallbacks:", err);
+      }
+    }
+
+    loadPublishedProjects();
+  }, []);
 
   const filters = [
     { id: "all", label: "All Projects" },
@@ -169,10 +234,22 @@ export default function WorkPage() {
     },
   ];
 
+  const allProjects = [
+    ...dbProjects,
+    ...projects.filter(
+      (p) =>
+        !dbProjects.some(
+          (db) =>
+            db.id === p.id ||
+            db.title.toLowerCase().trim() === p.title.toLowerCase().trim()
+        )
+    ),
+  ];
+
   const filteredProjects =
     activeFilter === "all"
-      ? projects
-      : projects.filter((p) => p.category === activeFilter);
+      ? allProjects
+      : allProjects.filter((p) => p.category === activeFilter);
 
   return (
     <div className="relative overflow-hidden">

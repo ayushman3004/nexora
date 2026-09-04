@@ -6,8 +6,8 @@ type ModalType = "inquiry" | "demo" | "case-study" | null;
 
 interface ModalContextType {
   activeModal: ModalType;
-  modalData?: any;
-  openModal: (type: ModalType, data?: any) => void;
+  modalData?: unknown;
+  openModal: (type: ModalType, data?: unknown) => void;
   closeModal: () => void;
 }
 
@@ -15,9 +15,9 @@ const ModalContext = createContext<ModalContextType | undefined>(undefined);
 
 export function ModalProvider({ children }: { children: ReactNode }) {
   const [activeModal, setActiveModal] = useState<ModalType>(null);
-  const [modalData, setModalData] = useState<any>(null);
+  const [modalData, setModalData] = useState<unknown>(null);
 
-  const openModal = (type: ModalType, data?: any) => {
+  const openModal = (type: ModalType, data?: unknown) => {
     setActiveModal(type);
     setModalData(data || null);
     // Prevent scrolling when modal is open

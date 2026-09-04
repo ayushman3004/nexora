@@ -22,10 +22,11 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile drawer on route change
-  useEffect(() => {
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
     setMobileMenuOpen(false);
-  }, [pathname]);
+  }
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -35,6 +36,10 @@ export function Navbar() {
     { name: "Products", href: "/products" },
     { name: "About", href: "/about" },
   ];
+
+  if (pathname.startsWith("/admin") || pathname.startsWith("/dashboard")) {
+    return null;
+  }
 
   const isActive = (href: string) => {
     if (href === "/") {
@@ -94,6 +99,12 @@ export function Navbar() {
 
           {/* Action CTA Button */}
           <div className="hidden md:flex items-center gap-3">
+            <Link
+              href="/dashboard"
+              className="text-xs font-semibold text-[#605850] hover:text-[#c2652a] transition-colors px-2 py-1"
+            >
+              Client Portal
+            </Link>
             <button
               onClick={() => openModal("inquiry")}
               className="group relative inline-flex items-center gap-1.5 px-5 py-2 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white text-xs lg:text-sm font-semibold shadow-warm-sm hover:shadow-warm-md transition-all duration-200"

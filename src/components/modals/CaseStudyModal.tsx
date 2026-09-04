@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, CheckCircle2, TrendingUp, Cpu, Server, Shield, ArrowRight, Gauge, Database, GitBranch } from "lucide-react";
+import { X, CheckCircle2, TrendingUp, Cpu, Server, ArrowRight, Gauge, Database, GitBranch } from "lucide-react";
 import { useModal } from "@/context/ModalContext";
 
 export function CaseStudyModal() {
@@ -44,7 +44,7 @@ export function CaseStudyModal() {
         ].map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
+            onClick={() => setActiveTab(tab.id as "overview" | "architecture" | "results")}
             className={`py-3 px-4 text-xs md:text-sm font-semibold border-b-2 transition-all ${
               activeTab === tab.id
                 ? "border-[#c2652a] text-[#c2652a]"

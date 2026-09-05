@@ -83,6 +83,13 @@ export async function registerAction(formData: FormData): Promise<AuthActionResu
     return { error: error.message };
   }
 
+  // Supabase security: if user already exists, identities is empty and no email is sent
+  if (data.user && (!data.user.identities || data.user.identities.length === 0)) {
+    return {
+      error: "An account with this email already exists. Please sign in directly or reset your password.",
+    };
+  }
+
   // If email confirmation is disabled or session is immediately available
   if (data.session) {
     return { success: true, redirectTo: "/dashboard" };
@@ -91,6 +98,37 @@ export async function registerAction(formData: FormData): Promise<AuthActionResu
   return {
     success: true,
     error: "Verification email sent! Please check your inbox and click the verification link to activate your portal account.",
+  };
+}
+
+export async function resendVerificationAction(formData: FormData): Promise<AuthActionResult> {
+  const email = formData.get("email") as string;
+  if (!email) {
+    return { error: "Please enter your email address." };
+  }
+
+  const headerList = await headers();
+  const host = headerList.get("host") || "localhost:3000";
+  const protocol = host.includes("localhost") ? "http" : "https";
+  const origin = `${protocol}://${host}`;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || origin;
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.resend({
+    type: "signup",
+    email,
+    options: {
+      emailRedirectTo: `${siteUrl}/auth/callback?next=/auth/verified`,
+    },
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return {
+    success: true,
+    error: "Verification email re-dispatched! Please check your inbox and spam folder.",
   };
 }
 

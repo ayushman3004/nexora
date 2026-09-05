@@ -373,3 +373,38 @@ export async function deleteReviewAction(reviewId: string) {
   revalidatePath("/products");
   return { success: true };
 }
+
+// 9. Confirm Client Email Directly (Admin One-Click Override)
+export async function confirmClientEmailAction(userId: string) {
+  await verifyAdmin();
+  const adminClient = createAdminClient();
+
+  const { error } = await adminClient.auth.admin.updateUserById(userId, {
+    email_confirm: true,
+  });
+
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/admin/clients");
+  return { success: true };
+}
+
+// 10. Generate Instant Verification Link for Client
+export async function generateVerificationLinkAction(email: string) {
+  await verifyAdmin();
+  const adminClient = createAdminClient();
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
+  const { data, error } = await adminClient.auth.admin.generateLink({
+    type: "magiclink",
+    email,
+    options: {
+      redirectTo: `${siteUrl}/auth/callback?next=/auth/verified`,
+    },
+  });
+
+  if (error) throw new Error(error.message);
+
+  return { success: true, actionLink: data?.properties?.action_link };
+}

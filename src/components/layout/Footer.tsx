@@ -142,24 +142,24 @@ export function Footer() {
               </div>
               <ul className="space-y-2.5 text-sm">
                 <li>
-                  <span className="text-[#605850] hover:text-[#3a302a] cursor-pointer">
+                  <Link href="/privacy" className="text-[#605850] hover:text-[#c2652a] transition-colors">
                     Privacy Policy
-                  </span>
+                  </Link>
                 </li>
                 <li>
-                  <span className="text-[#605850] hover:text-[#3a302a] cursor-pointer">
+                  <Link href="/terms" className="text-[#605850] hover:text-[#c2652a] transition-colors">
                     Terms of Engagement
-                  </span>
+                  </Link>
                 </li>
                 <li>
-                  <span className="text-[#605850] hover:text-[#3a302a] cursor-pointer">
-                    Security & SOC2
-                  </span>
+                  <Link href="/security" className="text-[#605850] hover:text-[#c2652a] transition-colors">
+                    Security &amp; Data Protection
+                  </Link>
                 </li>
                 <li>
-                  <span className="text-[#605850] hover:text-[#3a302a] cursor-pointer">
-                    Carbon Offset Status
-                  </span>
+                  <Link href="/sustainability" className="text-[#605850] hover:text-[#c2652a] transition-colors">
+                    Sustainability
+                  </Link>
                 </li>
               </ul>
             </div>

@@ -263,7 +263,7 @@ export default function AboutPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-[#c2652a]" />
-                  <span>Continuous automated CI/CD and SOC2 security postures</span>
+                  <span>Continuous automated CI/CD and rigorous data protection postures</span>
                 </div>
               </div>
             </div>

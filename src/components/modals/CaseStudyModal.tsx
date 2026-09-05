@@ -157,7 +157,7 @@ export function CaseStudyModal() {
                 </div>
                 <div className="flex items-start gap-2">
                   <CheckCircle2 className="w-4 h-4 text-[#c2652a] mt-0.5 shrink-0" />
-                  <span><strong>SOC2 Type II Compliance:</strong> Integrated envelope encryption across all Kafka topics and persistent ledger storage.</span>
+                  <span><strong>End-to-End Ledger Encryption:</strong> Integrated envelope encryption across all Kafka topics and persistent ledger storage.</span>
                 </div>
               </div>
             </div>

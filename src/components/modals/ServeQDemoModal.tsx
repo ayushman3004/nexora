@@ -138,8 +138,8 @@ export function ServeQDemoModal() {
               </div>
               <div className="flex flex-col items-center">
                 <ShieldCheck className="w-4 h-4 text-[#c2652a] mb-1" />
-                <span className="text-xs font-semibold text-[#3a302a]">SOC2 & HIPAA</span>
-                <span className="text-[10px] text-[#8c827a]">Ready Architecture</span>
+                <span className="text-xs font-semibold text-[#3a302a]">Data Security</span>
+                <span className="text-[10px] text-[#8c827a]">Encrypted At Rest</span>
               </div>
             </div>
 

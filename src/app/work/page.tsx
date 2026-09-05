@@ -129,6 +129,55 @@ export default function WorkPage() {
     loadPublishedProjects();
   }, []);
 
+  const studioProducts: ProjectItem[] = [
+    {
+      id: "serveq",
+      title: "ServeQ — Service Orchestration & Queue Dispatch",
+      clientName: "Nexora Product Studio",
+      category: "product",
+      categoryLabel: "Nexora Product Studio",
+      badgeLabel: "NEXORA PRODUCT",
+      tagline: "Queue less. Serve better.",
+      description:
+        "Queue and service management platform designed to simplify customer flow and improve operational efficiency for restaurants, clinics, and service businesses. Eliminates physical wait lines through real-time SMS/WhatsApp notifications and automated staff triage dashboards.",
+      challenge:
+        "Businesses lose valuable walk-ins and customers every day because of long, unmanaged queues. Existing queue management software was bulky, expensive, and forced customers to download redundant mobile apps.",
+      solution:
+        "Nexora engineered ServeQ — a lightweight, zero-install queue management system with real-time web socket queue displays, automated multi-channel notifications, staff telemetry, and wait-time prediction algorithms.",
+      features: [
+        "Real-time queue display & automated customer SMS/WhatsApp notifications",
+        "Staff command dashboard with live wait-time triage & analytics",
+        "Zero-install customer mobile pass with live progress tracker",
+        "Multi-location support with automated failover and queue balancing",
+      ],
+      tech: ["Next.js", "TypeScript", "PostgreSQL", "Tailwind CSS", "Twilio API"],
+      outcome:
+        "Live in production and powering over 25,000 monthly customer check-ins across early adopter venues with an average 42% reduction in perceived wait times.",
+      metrics: [
+        { label: "Monthly Check-Ins", value: "25,000+" },
+        { label: "Wait Time Reduction", value: "42%" },
+        { label: "Customer Satisfaction", value: "99.4%" },
+      ],
+      icon: Layers,
+      featured: false,
+      link: "/products",
+      demoLink: "",
+      isProduct: true,
+    },
+  ];
+
+  const allProjects = [
+    ...dbProjects,
+    ...studioProducts.filter(
+      (sp) =>
+        !dbProjects.some(
+          (dp) =>
+            dp.id === sp.id ||
+            dp.title.toLowerCase().trim().includes("serveq")
+        )
+    ),
+  ];
+
   const filters = [
     { id: "all", label: "All Projects" },
     { id: "web", label: "Client Websites" },
@@ -137,8 +186,8 @@ export default function WorkPage() {
 
   const filteredProjects =
     activeFilter === "all"
-      ? dbProjects
-      : dbProjects.filter((p) => p.category === activeFilter);
+      ? allProjects
+      : allProjects.filter((p) => p.category === activeFilter);
 
   return (
     <div className="relative overflow-hidden">

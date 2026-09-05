@@ -92,6 +92,12 @@ export async function registerAction(formData: FormData): Promise<AuthActionResu
     if (msg.includes("already") || msg.includes("exists")) {
       return { error: "An account with this email already exists. Please sign in." };
     }
+    if (msg.includes("bearer token") || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      return {
+        error:
+          "Hosting configuration issue: SUPABASE_SERVICE_ROLE_KEY is missing from Cloudflare environment variables. Please add it to your Cloudflare project settings and redeploy.",
+      };
+    }
     return { error: createError.message };
   }
 

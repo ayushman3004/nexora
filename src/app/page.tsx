@@ -50,7 +50,7 @@ export default function HomePage() {
       linkText: "See Growth Services",
       href: "/grow",
       icon: TrendingUp,
-      stats: "50M+ Organic Reach",
+      stats: "Sustainable Organic Growth",
       color: "from-[#f9ecea]/50 to-[#f6f0e8]",
       accentBorder: "group-hover:border-[#8c3c3c]/60",
     },
@@ -72,24 +72,24 @@ export default function HomePage() {
 
   const stats = [
     {
-      number: "10+",
-      label: "Internal Products Incubated",
-      desc: "From ServeQ to developer toolkits",
+      number: "2+",
+      label: "Projects Delivered",
+      desc: "Custom web applications & digital platforms",
     },
     {
-      number: "50M+",
-      label: "Users Impacted Globally",
-      desc: "Across consumer & B2B platforms",
+      number: "100%",
+      label: "Client-Focused",
+      desc: "Direct communication with engineering leads",
     },
     {
-      number: "24/7",
-      label: "Global Engineering Sprints",
-      desc: "Distributed squads in 4 timezones",
+      number: "Modern",
+      label: "Tech Stack",
+      desc: "Next.js, TypeScript, Tailwind & Supabase",
     },
     {
-      number: "99.99%",
-      label: "Production Uptime Guarantee",
-      desc: "Resilient cloud microservices",
+      number: "Fast",
+      label: "Deployment",
+      desc: "Rapid turnaround from concept to production",
     },
   ];
 

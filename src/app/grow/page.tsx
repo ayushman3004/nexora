@@ -257,21 +257,21 @@ export default function GrowPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-[#d8d0c8]/60">
             <div className="space-y-2 pt-6 md:pt-0">
-              <div className="text-5xl sm:text-6xl font-serif font-bold text-[#c2652a]">10+</div>
-              <div className="text-base font-bold text-[#3a302a]">Ventures & Products Scaled</div>
-              <p className="text-xs text-[#605850] max-w-xs mx-auto">From Series A to high-revenue maturity</p>
+              <div className="text-5xl sm:text-6xl font-serif font-bold text-[#c2652a]">2+</div>
+              <div className="text-base font-bold text-[#3a302a]">Projects Delivered</div>
+              <p className="text-xs text-[#605850] max-w-xs mx-auto">Custom web applications & digital platforms</p>
             </div>
 
             <div className="space-y-2 pt-6 md:pt-0">
-              <div className="text-5xl sm:text-6xl font-serif font-bold text-[#3a302a]">50M+</div>
-              <div className="text-base font-bold text-[#3a302a]">Users Reached Globally</div>
-              <p className="text-xs text-[#605850] max-w-xs mx-auto">Via organic and algorithmic growth engines</p>
+              <div className="text-5xl sm:text-6xl font-serif font-bold text-[#3a302a]">100%</div>
+              <div className="text-base font-bold text-[#3a302a]">Client-Focused</div>
+              <p className="text-xs text-[#605850] max-w-xs mx-auto">Direct communication with engineering leads</p>
             </div>
 
             <div className="space-y-2 pt-6 md:pt-0">
-              <div className="text-5xl sm:text-6xl font-serif font-bold text-[#8c3c3c]">24/7</div>
-              <div className="text-base font-bold text-[#3a302a]">Automated Growth Telemetry</div>
-              <p className="text-xs text-[#605850] max-w-xs mx-auto">Continuous conversion monitoring and anomaly triggers</p>
+              <div className="text-5xl sm:text-6xl font-serif font-bold text-[#8c3c3c]">Fast</div>
+              <div className="text-base font-bold text-[#3a302a]">Deployment Velocity</div>
+              <p className="text-xs text-[#605850] max-w-xs mx-auto">Rapid iterations from scoping to production</p>
             </div>
           </div>
         </div>

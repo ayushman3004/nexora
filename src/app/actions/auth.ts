@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 
@@ -59,46 +60,51 @@ export async function registerAction(formData: FormData): Promise<AuthActionResu
     return { error: "Password must be at least 6 characters." };
   }
 
-  const headerList = await headers();
-  const host = headerList.get("host") || "localhost:3000";
-  const protocol = host.includes("localhost") ? "http" : "https";
-  const origin = `${protocol}://${host}`;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || origin;
-
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.signUp({
+  // 1. Create user directly with email_confirm: true (Direct auth flow, no email sending)
+  const adminClient = createAdminClient();
+  const { data: newUser, error: createError } = await adminClient.auth.admin.createUser({
     email,
     password,
-    options: {
-      data: {
-        name,
-        company: company || null,
-        role: "client",
-      },
-      emailRedirectTo: `${siteUrl}/auth/callback?next=/auth/verified`,
+    email_confirm: true,
+    user_metadata: {
+      name,
+      company: company || null,
+      role: "client",
     },
   });
 
-  if (error) {
-    return { error: error.message };
+  if (createError) {
+    const msg = createError.message.toLowerCase();
+    if (msg.includes("already") || msg.includes("exists")) {
+      return { error: "An account with this email already exists. Please sign in." };
+    }
+    return { error: createError.message };
   }
 
-  // Supabase security: if user already exists, identities is empty and no email is sent
-  if (data.user && (!data.user.identities || data.user.identities.length === 0)) {
-    return {
-      error: "An account with this email already exists. Please sign in directly or reset your password.",
-    };
+  // 2. Ensure profile record is saved in public.profiles
+  if (newUser?.user) {
+    await adminClient.from("profiles").upsert({
+      id: newUser.user.id,
+      name,
+      email,
+      company: company || null,
+      role: "client",
+      updated_at: new Date().toISOString(),
+    });
   }
 
-  // If email confirmation is disabled or session is immediately available
-  if (data.session) {
-    return { success: true, redirectTo: "/dashboard" };
+  // 3. Automatically log in the user immediately
+  const supabase = await createClient();
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (signInError) {
+    return { success: true, redirectTo: "/login" };
   }
 
-  return {
-    success: true,
-    error: "Verification email sent! Please check your inbox and click the verification link to activate your portal account.",
-  };
+  return { success: true, redirectTo: "/dashboard" };
 }
 
 export async function resendVerificationAction(formData: FormData): Promise<AuthActionResult> {

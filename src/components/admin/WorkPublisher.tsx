@@ -5,6 +5,7 @@ import Link from "next/link";
 import {
   toggleWorkPublishAction,
   updateProjectAction,
+  createProjectAction,
 } from "@/app/actions/admin";
 import { ProjectStatusBadge } from "@/components/client/ProjectStatusBadge";
 import {
@@ -14,6 +15,10 @@ import {
   Save,
   ExternalLink,
   Edit3,
+  Plus,
+  Sparkles,
+  Layers,
+  Store,
 } from "lucide-react";
 import type { Project } from "@/types/database";
 
@@ -23,8 +28,21 @@ interface WorkPublisherProps {
 
 export function WorkPublisher({ projects }: WorkPublisherProps) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [addModalOpen, setAddModalOpen] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+
+  const handleCreateShowcase = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    formData.set("client_id", ""); // No client required
+    startTransition(async () => {
+      await createProjectAction(formData);
+      setStatusMessage("Showcase project created and published to /work!");
+      setAddModalOpen(false);
+      setTimeout(() => setStatusMessage(null), 3500);
+    });
+  };
 
   const handleTogglePublish = (projectId: string, currentPublished: boolean) => {
     startTransition(async () => {
@@ -73,20 +91,29 @@ export function WorkPublisher({ projects }: WorkPublisherProps) {
             Public Portfolio Auto-Publishing Engine
           </h2>
           <p className="text-xs text-[#605850] mt-1 max-w-xl leading-relaxed">
-            When you mark a project as &ldquo;Published&rdquo;, it automatically renders on the live
-            Nexora <Link href="/work" target="_blank" className="text-[#c2652a] underline font-medium">/work</Link> page
-            using the existing Sahara Warm browser preview and case study layout.
+            Only delivered projects marked as &ldquo;Published&rdquo; render on the live
+            Nexora <Link href="/work" target="_blank" className="text-[#c2652a] underline font-medium">/work</Link> page.
+            You can add internal studio projects or client showcases without needing a client account.
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <span className="px-3.5 py-1.5 rounded-full bg-[#c2652a]/10 text-[#c2652a] border border-[#c2652a]/20 text-xs font-mono font-semibold">
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            onClick={() => setAddModalOpen(true)}
+            className="px-4 py-2 rounded-full bg-[#c2652a] text-white text-xs font-semibold shadow-warm-sm hover:bg-[#a8521e] transition-all flex items-center gap-1.5 cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            <span>+ Add Project (No Client Required)</span>
+          </button>
+
+          <span className="px-3.5 py-2 rounded-full bg-[#c2652a]/10 text-[#c2652a] border border-[#c2652a]/20 text-xs font-mono font-semibold">
             {publishedCount} Published Showcase Item{publishedCount === 1 ? "" : "s"}
           </span>
+
           <Link
             href="/work"
             target="_blank"
-            className="px-4 py-2 rounded-full bg-[#c2652a] text-white text-xs font-semibold shadow-warm-sm hover:bg-[#a8521e] transition-all flex items-center gap-1.5"
+            className="px-4 py-2 rounded-full bg-[#3a302a] text-[#faf5ee] text-xs font-semibold shadow-warm-sm hover:bg-[#2e2621] transition-all flex items-center gap-1.5"
           >
             <span>Live /work</span>
             <ExternalLink className="w-3.5 h-3.5" />
@@ -96,83 +123,331 @@ export function WorkPublisher({ projects }: WorkPublisherProps) {
 
       {/* Projects Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {projects.map((proj) => (
-          <div
-            key={proj.id}
-            className={`p-6 rounded-3xl bg-white/80 border transition-all flex flex-col justify-between ${
-              proj.published
-                ? "border-[#c2652a]/50 shadow-warm-md"
-                : "border-[#d8d0c8]/60 shadow-warm-sm"
-            }`}
-          >
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <ProjectStatusBadge status={proj.status} size="sm" />
-                <span
-                  className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-bold uppercase ${
+        {projects.map((proj) => {
+          const isDelivered = proj.status === "DELIVERED" || proj.status === "COMPLETED";
+          const isLiveOnWork = proj.published && isDelivered;
+
+          return (
+            <div
+              key={proj.id}
+              className={`p-6 rounded-3xl bg-white/80 border transition-all flex flex-col justify-between ${
+                isLiveOnWork
+                  ? "border-[#c2652a]/50 shadow-warm-md"
+                  : "border-[#d8d0c8]/60 shadow-warm-sm"
+              }`}
+            >
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <ProjectStatusBadge status={proj.status} size="sm" />
+                  <span
+                    className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-bold uppercase ${
+                      isLiveOnWork
+                        ? "bg-[#c2652a] text-white"
+                        : proj.published
+                        ? "bg-[#fbe8d8] text-[#c2652a] border border-[#f0a878]/50"
+                        : "bg-[#f2ece4] text-[#8c827a]"
+                    }`}
+                  >
+                    {isLiveOnWork
+                      ? "LIVE ON /WORK"
+                      : proj.published
+                      ? "AWAITING DELIVERY"
+                      : "DRAFT"}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  {!proj.client_id ? (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-medium bg-[#fbe8d8]/80 text-[#c2652a] border border-[#f0a878]/40">
+                      Studio Showcase (No Client)
+                    </span>
+                  ) : (
+                    <span className="text-[11px] font-mono text-[#8c827a]">
+                      Client Linked
+                    </span>
+                  )}
+                </div>
+
+                <div>
+                  <h3 className="font-serif text-lg font-medium text-[#3a302a]">
+                    {proj.title}
+                  </h3>
+                  <p className="text-xs text-[#605850] line-clamp-2 mt-1">
+                    {proj.description || "Digital engineering project."}
+                  </p>
+                </div>
+
+                {proj.website_url && (
+                  <div className="text-xs text-[#c2652a] flex items-center gap-1">
+                    <Globe className="w-3 h-3" />
+                    <span className="truncate">{proj.website_url}</span>
+                  </div>
+                )}
+
+                {proj.technologies && proj.technologies.length > 0 && (
+                  <div className="flex flex-wrap gap-1 pt-1">
+                    {proj.technologies.slice(0, 3).map((t) => (
+                      <span
+                        key={t}
+                        className="px-2 py-0.5 rounded bg-[#faf5ee] border border-[#d8d0c8]/60 text-[10px] font-mono text-[#605850]"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="pt-5 mt-5 border-t border-[#d8d0c8]/40 flex items-center justify-between gap-2">
+                <button
+                  onClick={() => setSelectedProject(proj)}
+                  className="px-3.5 py-1.5 rounded-full bg-[#f2ece4] hover:bg-[#ece6dc] text-xs font-semibold text-[#3a302a] transition-colors inline-flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Edit3 className="w-3.5 h-3.5" />
+                  <span>Edit Showcase</span>
+                </button>
+
+                <button
+                  onClick={() => handleTogglePublish(proj.id, proj.published)}
+                  disabled={isPending}
+                  className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                     proj.published
-                      ? "bg-[#c2652a] text-white"
-                      : "bg-[#f2ece4] text-[#8c827a]"
+                      ? "bg-[#8c3c3c]/15 text-[#8c3c3c] hover:bg-[#8c3c3c]/25"
+                      : "bg-[#c2652a] text-white hover:bg-[#a8521e] shadow-warm-sm"
                   }`}
                 >
-                  {proj.published ? "LIVE ON /WORK" : "DRAFT"}
-                </span>
+                  {proj.published ? "Unpublish" : "Deliver & Publish"}
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Add Project (No Client Required) Modal */}
+      {addModalOpen && (
+        <div className="fixed inset-0 z-50 bg-[#3a302a]/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#faf5ee] rounded-3xl p-6 sm:p-8 max-w-2xl w-full border border-[#d8d0c8] shadow-warm-lg space-y-6 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-3 border-b border-[#d8d0c8]/60">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="px-2.5 py-0.5 rounded-full bg-[#fbe8d8] text-[#c2652a] border border-[#f0a878]/40 text-[10px] font-mono font-bold uppercase">
+                    Studio Showcase Mode
+                  </span>
+                  <span className="text-xs text-[#8c827a]">No Client Required</span>
+                </div>
+                <h3 className="text-2xl font-serif text-[#3a302a]">
+                  Add Project Without Client
+                </h3>
+              </div>
+              <button
+                onClick={() => setAddModalOpen(false)}
+                className="p-2 rounded-full hover:bg-[#ece6dc] text-[#605850]"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateShowcase} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold uppercase text-[#3a302a] mb-1">
+                  Project Title *
+                </label>
+                <input
+                  name="title"
+                  required
+                  placeholder="e.g. Lumina Health Platform or Rooz Bespoke Atelier"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#d8d0c8] text-sm text-[#3a302a]"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold uppercase text-[#3a302a] mb-1">
+                    Category Filter
+                  </label>
+                  <select
+                    name="category"
+                    defaultValue="web"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#d8d0c8] text-sm text-[#3a302a]"
+                  >
+                    <option value="web">Client Website (category: web)</option>
+                    <option value="product">Nexora Product (category: product)</option>
+                    <option value="architecture">Engineering Architecture</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold uppercase text-[#3a302a] mb-1">
+                    Status
+                  </label>
+                  <select
+                    name="status"
+                    defaultValue="DELIVERED"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#d8d0c8] text-sm text-[#3a302a]"
+                  >
+                    <option value="DELIVERED">Delivered (Showcase Ready)</option>
+                    <option value="COMPLETED">Completed</option>
+                    <option value="IN_PROGRESS">In Progress</option>
+                  </select>
+                </div>
               </div>
 
               <div>
-                <h3 className="font-serif text-lg font-medium text-[#3a302a]">
-                  {proj.title}
-                </h3>
-                <p className="text-xs text-[#605850] line-clamp-2 mt-1">
-                  {proj.description || "Digital engineering project."}
+                <label className="block text-xs font-semibold uppercase text-[#3a302a] mb-1">
+                  Tagline / Pitch
+                </label>
+                <input
+                  name="tagline"
+                  placeholder="e.g. A bespoke digital atelier celebrating generational craftsmanship."
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#d8d0c8] text-sm text-[#3a302a]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold uppercase text-[#3a302a] mb-1">
+                  Public Overview / Scope
+                </label>
+                <textarea
+                  name="description"
+                  rows={2}
+                  placeholder="Overview paragraph displayed on the project card..."
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#d8d0c8] text-sm text-[#3a302a]"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold uppercase text-[#3a302a] mb-1">
+                    Website URL (for live browser preview)
+                  </label>
+                  <input
+                    name="website_url"
+                    type="url"
+                    placeholder="https://clientdomain.com"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#d8d0c8] text-sm text-[#3a302a]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold uppercase text-[#3a302a] mb-1">
+                    Demo / Staging Preview URL
+                  </label>
+                  <input
+                    name="preview_url"
+                    type="url"
+                    placeholder="https://preview.clientdomain.com"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#d8d0c8] text-sm text-[#3a302a]"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold uppercase text-[#3a302a] mb-1">
+                  Technologies (comma separated)
+                </label>
+                <input
+                  name="technologies"
+                  placeholder="Next.js 16, TypeScript, Tailwind CSS, Vercel Edge"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#d8d0c8] text-sm text-[#3a302a]"
+                />
+              </div>
+
+              {/* Case study metadata */}
+              <div className="p-4 rounded-2xl bg-[#f6f0e8] border border-[#d8d0c8]/80 space-y-3">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#c2652a]">
+                  Case Study Narrative (Optional)
+                </span>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-semibold uppercase text-[#3a302a] mb-1">
+                      The Challenge
+                    </label>
+                    <textarea
+                      name="challenge"
+                      rows={2}
+                      placeholder="e.g. Modernizing legacy infrastructure..."
+                      className="w-full px-3 py-2 rounded-xl bg-white border border-[#d8d0c8] text-xs text-[#3a302a]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold uppercase text-[#3a302a] mb-1">
+                      The Solution
+                    </label>
+                    <textarea
+                      name="solution"
+                      rows={2}
+                      placeholder="e.g. Engineered custom Next.js microservices..."
+                      className="w-full px-3 py-2 rounded-xl bg-white border border-[#d8d0c8] text-xs text-[#3a302a]"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold uppercase text-[#3a302a] mb-1">
+                    Key Features Delivered (comma-separated)
+                  </label>
+                  <input
+                    name="features"
+                    placeholder="Interactive Preview, Mobile-First Booking, Edge CDN"
+                    className="w-full px-3 py-2 rounded-xl bg-white border border-[#d8d0c8] text-xs text-[#3a302a]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold uppercase text-[#3a302a] mb-1">
+                    Verified Business Outcome
+                  </label>
+                  <input
+                    name="outcome"
+                    placeholder="e.g. 100% lighthouse score and 3x conversion increase."
+                    className="w-full px-3 py-2 rounded-xl bg-white border border-[#d8d0c8] text-xs text-[#3a302a]"
+                  />
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-[#faf5ee] border border-[#d8d0c8]/80 space-y-1">
+                <div className="flex items-center gap-2.5">
+                  <input
+                    type="checkbox"
+                    id="add_published"
+                    name="published"
+                    value="true"
+                    defaultChecked
+                    className="w-4 h-4 rounded border-[#d8d0c8] text-[#c2652a] focus:ring-[#c2652a] accent-[#c2652a]"
+                  />
+                  <label htmlFor="add_published" className="text-xs font-semibold text-[#3a302a] cursor-pointer">
+                    Deliver and Publish immediately to /work showcase
+                  </label>
+                </div>
+                <p className="text-[11px] text-[#8c827a] pl-6.5">
+                  The project will be live in production on the public /work showcase page immediately.
                 </p>
               </div>
 
-              {proj.website_url && (
-                <div className="text-xs text-[#c2652a] flex items-center gap-1">
-                  <Globe className="w-3 h-3" />
-                  <span className="truncate">{proj.website_url}</span>
-                </div>
-              )}
-
-              {proj.technologies && proj.technologies.length > 0 && (
-                <div className="flex flex-wrap gap-1 pt-1">
-                  {proj.technologies.slice(0, 3).map((t) => (
-                    <span
-                      key={t}
-                      className="px-2 py-0.5 rounded bg-[#faf5ee] border border-[#d8d0c8]/60 text-[10px] font-mono text-[#605850]"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className="pt-5 mt-5 border-t border-[#d8d0c8]/40 flex items-center justify-between gap-2">
-              <button
-                onClick={() => setSelectedProject(proj)}
-                className="px-3.5 py-1.5 rounded-full bg-[#f2ece4] hover:bg-[#ece6dc] text-xs font-semibold text-[#3a302a] transition-colors inline-flex items-center gap-1.5 cursor-pointer"
-              >
-                <Edit3 className="w-3.5 h-3.5" />
-                <span>Edit Showcase</span>
-              </button>
-
-              <button
-                onClick={() => handleTogglePublish(proj.id, proj.published)}
-                disabled={isPending}
-                className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
-                  proj.published
-                    ? "bg-[#8c3c3c]/15 text-[#8c3c3c] hover:bg-[#8c3c3c]/25"
-                    : "bg-[#c2652a] text-white hover:bg-[#a8521e] shadow-warm-sm"
-                }`}
-              >
-                {proj.published ? "Unpublish" : "Publish to /work"}
-              </button>
-            </div>
+              <div className="pt-4 border-t border-[#d8d0c8]/60 flex items-center justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setAddModalOpen(false)}
+                  className="px-4 py-2 rounded-full border border-[#d8d0c8] text-xs font-semibold text-[#605850]"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isPending}
+                  className="px-6 py-2 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white text-xs font-semibold shadow-warm-sm transition-all flex items-center gap-2 cursor-pointer"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>{isPending ? "Creating..." : "Create Showcase Project"}</span>
+                </button>
+              </div>
+            </form>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
 
       {/* Edit Showcase Modal */}
       {selectedProject && (
@@ -184,7 +459,7 @@ export function WorkPublisher({ projects }: WorkPublisherProps) {
                   Edit Work Showcase Metadata
                 </h3>
                 <p className="text-xs text-[#605850]">
-                  Configure fields displayed on the public /work showcase page
+                  Configure case study fields displayed on the public /work showcase page
                 </p>
               </div>
               <button
@@ -220,6 +495,7 @@ export function WorkPublisher({ projects }: WorkPublisherProps) {
                   >
                     <option value="web">Client Website (category: web)</option>
                     <option value="product">Nexora Product (category: product)</option>
+                    <option value="architecture">Engineering Architecture</option>
                   </select>
                 </div>
 
@@ -232,7 +508,7 @@ export function WorkPublisher({ projects }: WorkPublisherProps) {
                     defaultValue={selectedProject.published ? "true" : "false"}
                     className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#d8d0c8] text-sm text-[#3a302a]"
                   >
-                    <option value="true">Published to /work</option>
+                    <option value="true">Published to /work (Delivered)</option>
                     <option value="false">Unpublished / Hidden</option>
                   </select>
                 </div>
@@ -240,7 +516,19 @@ export function WorkPublisher({ projects }: WorkPublisherProps) {
 
               <div>
                 <label className="block text-xs font-semibold uppercase text-[#3a302a] mb-1">
-                  Public Overview / Tagline
+                  Tagline / Pitch
+                </label>
+                <input
+                  name="tagline"
+                  defaultValue={selectedProject.case_study?.tagline || ""}
+                  placeholder="e.g. A bespoke digital atelier celebrating generational craftsmanship."
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#d8d0c8] text-sm text-[#3a302a]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold uppercase text-[#3a302a] mb-1">
+                  Public Overview / Scope
                 </label>
                 <textarea
                   name="description"
@@ -293,6 +581,69 @@ export function WorkPublisher({ projects }: WorkPublisherProps) {
                   placeholder="Next.js 16, TypeScript, Tailwind CSS, Vercel Edge"
                   className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#d8d0c8] text-sm text-[#3a302a]"
                 />
+              </div>
+
+              {/* Case study fields */}
+              <div className="p-4 rounded-2xl bg-[#f6f0e8] border border-[#d8d0c8]/80 space-y-3">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#c2652a]">
+                  Case Study Narrative
+                </span>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-semibold uppercase text-[#3a302a] mb-1">
+                      The Challenge
+                    </label>
+                    <textarea
+                      name="challenge"
+                      rows={2}
+                      defaultValue={selectedProject.case_study?.challenge || ""}
+                      placeholder="e.g. Modernizing legacy infrastructure..."
+                      className="w-full px-3 py-2 rounded-xl bg-white border border-[#d8d0c8] text-xs text-[#3a302a]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold uppercase text-[#3a302a] mb-1">
+                      The Solution
+                    </label>
+                    <textarea
+                      name="solution"
+                      rows={2}
+                      defaultValue={selectedProject.case_study?.solution || ""}
+                      placeholder="e.g. Engineered custom Next.js microservices..."
+                      className="w-full px-3 py-2 rounded-xl bg-white border border-[#d8d0c8] text-xs text-[#3a302a]"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold uppercase text-[#3a302a] mb-1">
+                    Key Features Delivered (comma-separated)
+                  </label>
+                  <input
+                    name="features"
+                    defaultValue={
+                      selectedProject.case_study?.features
+                        ? selectedProject.case_study.features.join(", ")
+                        : ""
+                    }
+                    placeholder="Interactive Preview, Mobile-First Booking, Edge CDN"
+                    className="w-full px-3 py-2 rounded-xl bg-white border border-[#d8d0c8] text-xs text-[#3a302a]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold uppercase text-[#3a302a] mb-1">
+                    Verified Business Outcome
+                  </label>
+                  <input
+                    name="outcome"
+                    defaultValue={selectedProject.case_study?.outcome || ""}
+                    placeholder="e.g. 100% lighthouse score and 3x conversion increase."
+                    className="w-full px-3 py-2 rounded-xl bg-white border border-[#d8d0c8] text-xs text-[#3a302a]"
+                  />
+                </div>
               </div>
 
               <div className="pt-4 border-t border-[#d8d0c8]/60 flex items-center justify-end gap-3">

@@ -52,6 +52,7 @@ export default function WorkPage() {
   const { openModal } = useModal();
   const [activeFilter, setActiveFilter] = useState("all");
   const [dbProjects, setDbProjects] = useState<ProjectItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [fullscreenProject, setFullscreenProject] = useState<{
     title: string;
     url: string;
@@ -67,6 +68,7 @@ export default function WorkPage() {
           .from("projects")
           .select("*")
           .eq("published", true)
+          .in("status", ["DELIVERED", "COMPLETED"])
           .order("created_at", { ascending: false });
 
         if (data && data.length > 0) {
@@ -114,9 +116,13 @@ export default function WorkPage() {
             isProduct: item.category === "product",
           }));
           setDbProjects(mapped);
+        } else {
+          setDbProjects([]);
         }
       } catch (err) {
-        console.warn("Could not load dynamic projects from database, using resilient fallbacks:", err);
+        console.warn("Could not load dynamic projects from database:", err);
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -129,127 +135,10 @@ export default function WorkPage() {
     { id: "product", label: "Nexora Products" },
   ];
 
-  const projects: ProjectItem[] = [
-    {
-      id: "chakos-kitchen",
-      title: "Chakos Kerala Kitchen & Bar",
-      clientName: "Chakos Hospitality & Dining",
-      location: "Fontainhas, Panjim, Goa",
-      category: "web",
-      categoryLabel: "Boutique Restaurant & Hospitality",
-      badgeLabel: "LIVE CLIENT WEBSITE",
-      tagline: "A boutique Malayali dining sanctuary in the Latin Quarter of Panjim.",
-      description:
-        "A sensory culinary web platform engineered for Fontainhas' premier dining destination. Features an interactive digital dining menu, table reservation system, virtual 360° tour, AI palate matching, and multi-language support (English, Malayalam, Portuguese). Designed to reflect Fontainhas' historic Portuguese architecture while delivering frictionless mobile ordering.",
-      challenge:
-        "Fontainhas draws thousands of domestic and global tourists seeking authentic coastal cuisine. The client lacked a high-end digital presence and was losing revenue to third-party delivery and booking aggregators charging steep commissions.",
-      solution:
-        "Nexora engineered an ultra-fast, mobile-first web experience with rich imagery, interactive dish dietary filters (Spicy, Coastal, Vegetarian), an instant table reservation engine, and direct customer concierge triage.",
-      features: [
-        "Interactive digital menu with diet badges & real-time cart",
-        "Table reservation pipeline with instant confirmation UI",
-        "AI Palate Matcher helping diners discover regional dishes",
-        "Multilingual interface (English, Malayalam, Portuguese)",
-        "Sub-second load speed powered by Next.js & Edge CDN",
-      ],
-      tech: ["Next.js 14", "TypeScript", "Tailwind CSS", "Framer Motion", "Vercel Edge"],
-      outcome:
-        "3.8x increase in direct table reservations within 45 days. Over 14,000 monthly digital menu visits, completely bypassing third-party aggregator commissions.",
-      metrics: [
-        { label: "Direct Reservations", value: "+380%" },
-        { label: "Monthly Menu Views", value: "14,000+" },
-        { label: "Aggregator Fees Saved", value: "100%" },
-      ],
-      icon: Store,
-      featured: true,
-      demoLink: "https://chackos-qidp.vercel.app/",
-    },
-    {
-      id: "rooz-tailors",
-      title: "Rooz Tailors — Bespoke Atelier & Retail Store",
-      clientName: "Rooz Tailors Atelier & Clothiers",
-      location: "Fontainhas, Panjim, Goa",
-      category: "web",
-      categoryLabel: "Bespoke Sartorial & Luxury Retail",
-      badgeLabel: "LIVE CLIENT WEBSITE",
-      tagline: "Savile Row precision meets Malabar craftsmanship in historic Fontainhas.",
-      description:
-        "Luxury bespoke tailoring and ready-to-wear retail e-commerce platform. Features an interactive 36-point body drafting configurator, custom suit customizer with natural floating horsehair canvas, curated ready-to-wear seasonal collections, luxury fabric explorer (5,000+ Italian & British mills), and VIP master fitting studio appointments.",
-      challenge:
-        "Traditional luxury bespoke tailoring relies heavily on lengthy in-person consultations. Rooz needed an international digital showroom to attract high-net-worth travelers, showcase handcrafted masterworks (full floating canvas tuxedos, handloomed raw silk sherwanis), and sell ready-to-wear collections online.",
-      solution:
-        "Nexora crafted a luxury editorial e-commerce platform combining Savile Row aesthetic discipline with modern digital commerce — featuring an interactive suit customizer, fabric mill library, AI style consultant, and a VIP fitting studio scheduler.",
-      features: [
-        "Made-to-measure 36-point anatomical drafting interface",
-        "Curated retail collection with full shopping bag & checkout",
-        "Interactive 5,000+ luxury fabric and horsehair canvas explorer",
-        "Private VIP fitting studio booking appointment system",
-        "AI Fit Consultant & style matching recommendation engine",
-      ],
-      tech: ["Next.js 14", "TypeScript", "Tailwind CSS", "Framer Motion", "Vercel"],
-      outcome:
-        "Generated over ₹18.5L in bespoke commissions and retail orders in the first 60 days, with 45+ international master fitting sessions booked.",
-      metrics: [
-        { label: "Initial 60-Day Revenue", value: "₹18.5L+" },
-        { label: "VIP Master Fittings", value: "45+ Booked" },
-        { label: "Luxury Fabric Catalog", value: "5,000+ Mills" },
-      ],
-      icon: ShoppingCart,
-      featured: true,
-      demoLink: "https://www.rooztextile.co.in/",
-    },
-    {
-      id: "serveq",
-      title: "ServeQ — Service Orchestration & Queue Dispatch",
-      clientName: "Nexora In-House Product",
-      category: "product",
-      categoryLabel: "SaaS / Service Management",
-      badgeLabel: "NEXORA IN-HOUSE PRODUCT",
-      tagline: "Queue less. Serve better.",
-      description:
-        "Queue and service management platform designed to simplify customer flow and improve operational efficiency for restaurants, clinics, and service businesses. Eliminates physical wait lines through real-time SMS/WhatsApp notifications and automated staff triage dashboards.",
-      challenge:
-        "Businesses lose valuable walk-ins and customers every day because of long, unmanaged queues. Existing queue management software was bulky, expensive, and forced customers to download redundant mobile apps.",
-      solution:
-        "Nexora engineered ServeQ — a lightweight, zero-install queue management system with real-time web socket queue displays, automated multi-channel notifications, staff telemetry, and wait-time prediction algorithms.",
-      features: [
-        "Real-time queue display & automated customer SMS/WhatsApp notifications",
-        "Staff command dashboard with live wait-time triage & analytics",
-        "Zero-install customer mobile pass with live progress tracker",
-        "Multi-location support with automated failover and queue balancing",
-      ],
-      tech: ["Next.js", "TypeScript", "PostgreSQL", "Tailwind CSS", "Twilio API"],
-      outcome:
-        "Live in production and powering over 25,000 monthly customer check-ins across early adopter venues with an average 42% reduction in perceived wait times.",
-      metrics: [
-        { label: "Monthly Check-Ins", value: "25,000+" },
-        { label: "Wait Time Reduction", value: "42%" },
-        { label: "Customer Satisfaction", value: "99.4%" },
-      ],
-      icon: Layers,
-      featured: false,
-      link: "/products",
-      demoLink: "",
-      isProduct: true,
-    },
-  ];
-
-  const allProjects = [
-    ...dbProjects,
-    ...projects.filter(
-      (p) =>
-        !dbProjects.some(
-          (db) =>
-            db.id === p.id ||
-            db.title.toLowerCase().trim() === p.title.toLowerCase().trim()
-        )
-    ),
-  ];
-
   const filteredProjects =
     activeFilter === "all"
-      ? allProjects
-      : allProjects.filter((p) => p.category === activeFilter);
+      ? dbProjects
+      : dbProjects.filter((p) => p.category === activeFilter);
 
   return (
     <div className="relative overflow-hidden">
@@ -580,13 +469,32 @@ export default function WorkPage() {
           })}
         </div>
 
-        {filteredProjects.length === 0 && (
-          <div className="text-center py-20">
-            <p className="text-[#8c827a] text-sm">
-              No projects in this category yet. Check back soon.
-            </p>
+        {loading ? (
+          <div className="py-20 text-center space-y-3">
+            <div className="w-8 h-8 rounded-full border-2 border-[#c2652a] border-t-transparent animate-spin mx-auto" />
+            <p className="text-xs font-mono text-[#8c827a]">Loading published portfolio...</p>
           </div>
-        )}
+        ) : filteredProjects.length === 0 ? (
+          <div className="text-center py-20 px-6 rounded-3xl bg-white/60 border border-dashed border-[#d8d0c8] max-w-xl mx-auto space-y-4">
+            <Briefcase className="w-10 h-10 text-[#c2652a]/60 mx-auto" />
+            <h3 className="text-2xl font-serif text-[#3a302a]">
+              Portfolio in Production
+            </h3>
+            <p className="text-sm text-[#605850] font-sans leading-relaxed">
+              New client architectures and digital platforms are currently in development.
+              Projects published by the studio upon delivery will appear here live.
+            </p>
+            <div className="pt-2">
+              <button
+                onClick={() => openModal("inquiry")}
+                className="px-6 py-3 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white text-xs sm:text-sm font-semibold shadow-warm-sm transition-all inline-flex items-center gap-2 cursor-pointer"
+              >
+                <span>Start a Project</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        ) : null}
       </section>
 
       {/* ============================================================ */}

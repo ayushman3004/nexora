@@ -154,13 +154,16 @@ export function ProjectEditor({
                   defaultValue={project.client_id || ""}
                   className="w-full px-4 py-2.5 rounded-xl bg-[#faf5ee]/60 border border-[#d8d0c8] text-sm text-[#3a302a]"
                 >
-                  <option value="">Unassigned</option>
+                  <option value="">No Client (Internal Studio Project / Direct Showcase)</option>
                   {clients.map((c) => (
                     <option key={c.id} value={c.id}>
                       {c.name} ({c.email}) {c.company ? `— ${c.company}` : ""}
                     </option>
                   ))}
                 </select>
+                <p className="text-[11px] text-[#8c827a] mt-1">
+                  Leave as &ldquo;No Client&rdquo; for studio-engineered internal products or direct portfolio showcases.
+                </p>
               </div>
 
               <div>
@@ -178,12 +181,12 @@ export function ProjectEditor({
                   }
                   className="w-full px-4 py-2.5 rounded-xl bg-[#faf5ee]/60 border border-[#d8d0c8] text-sm text-[#3a302a]"
                 >
+                  <option value="DELIVERED">Delivered (Showcase Eligible)</option>
+                  <option value="COMPLETED">Completed (Showcase Eligible)</option>
+                  <option value="IN_PROGRESS">In Progress</option>
+                  <option value="ACCEPTED">Accepted</option>
                   <option value="REQUESTED">Requested</option>
                   <option value="UNDER_REVIEW">Under Review</option>
-                  <option value="ACCEPTED">Accepted</option>
-                  <option value="IN_PROGRESS">In Progress</option>
-                  <option value="DELIVERED">Delivered</option>
-                  <option value="COMPLETED">Completed</option>
                   <option value="ON_HOLD">On Hold</option>
                   <option value="CANCELLED">Cancelled</option>
                 </select>
@@ -216,9 +219,21 @@ export function ProjectEditor({
                   className="w-full px-4 py-2.5 rounded-xl bg-[#faf5ee]/60 border border-[#d8d0c8] text-sm text-[#3a302a]"
                 >
                   <option value="false">Unpublished (Private)</option>
-                  <option value="true">Published (Visible on /work)</option>
+                  <option value="true">Published (Visible on /work when Delivered)</option>
                 </select>
               </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold uppercase text-[#3a302a] mb-1">
+                Public Tagline / Pitch
+              </label>
+              <input
+                name="tagline"
+                defaultValue={project.case_study?.tagline || ""}
+                placeholder="e.g. High-performance digital engineering architecture."
+                className="w-full px-4 py-2.5 rounded-xl bg-[#faf5ee]/60 border border-[#d8d0c8] text-sm text-[#3a302a]"
+              />
             </div>
 
             <div>
@@ -227,7 +242,7 @@ export function ProjectEditor({
               </label>
               <textarea
                 name="description"
-                rows={4}
+                rows={3}
                 defaultValue={project.description || ""}
                 className="w-full px-4 py-2.5 rounded-xl bg-[#faf5ee]/60 border border-[#d8d0c8] text-sm text-[#3a302a]"
               />
@@ -271,6 +286,69 @@ export function ProjectEditor({
                 placeholder="Next.js 16, TypeScript, Tailwind CSS, Framer Motion"
                 className="w-full px-4 py-2.5 rounded-xl bg-[#faf5ee]/60 border border-[#d8d0c8] text-sm text-[#3a302a]"
               />
+            </div>
+
+            {/* Case Study Details */}
+            <div className="p-4 rounded-2xl bg-[#faf5ee] border border-[#d8d0c8]/80 space-y-3">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#c2652a]">
+                Case Study Narrative (/work page)
+              </span>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-semibold uppercase text-[#3a302a] mb-1">
+                    The Challenge
+                  </label>
+                  <textarea
+                    name="challenge"
+                    rows={2}
+                    defaultValue={project.case_study?.challenge || ""}
+                    placeholder="e.g. Modernizing legacy infrastructure..."
+                    className="w-full px-3 py-2 rounded-xl bg-white border border-[#d8d0c8] text-xs text-[#3a302a]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold uppercase text-[#3a302a] mb-1">
+                    The Solution
+                  </label>
+                  <textarea
+                    name="solution"
+                    rows={2}
+                    defaultValue={project.case_study?.solution || ""}
+                    placeholder="e.g. Engineered custom Next.js architecture..."
+                    className="w-full px-3 py-2 rounded-xl bg-white border border-[#d8d0c8] text-xs text-[#3a302a]"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-semibold uppercase text-[#3a302a] mb-1">
+                  Key Features Delivered (comma-separated)
+                </label>
+                <input
+                  name="features"
+                  defaultValue={
+                    project.case_study?.features
+                      ? project.case_study.features.join(", ")
+                      : ""
+                  }
+                  placeholder="Interactive Preview, Mobile-First Booking, Edge CDN"
+                  className="w-full px-3 py-2 rounded-xl bg-white border border-[#d8d0c8] text-xs text-[#3a302a]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-semibold uppercase text-[#3a302a] mb-1">
+                  Verified Business Outcome
+                </label>
+                <input
+                  name="outcome"
+                  defaultValue={project.case_study?.outcome || ""}
+                  placeholder="e.g. 100% lighthouse score and 3x conversion increase."
+                  className="w-full px-3 py-2 rounded-xl bg-white border border-[#d8d0c8] text-xs text-[#3a302a]"
+                />
+              </div>
             </div>
 
             <div className="pt-4 border-t border-[#d8d0c8]/60 flex justify-end">

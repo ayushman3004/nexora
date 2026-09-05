@@ -111,8 +111,8 @@ export function ProjectTable({ projects, clients }: ProjectTableProps) {
                             </p>
                           </div>
                         ) : (
-                          <span className="text-[11px] font-mono text-[#8c827a]">
-                            Unassigned
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium bg-[#fbe8d8]/80 text-[#c2652a] border border-[#f0a878]/40">
+                            Studio Showcase (No Client)
                           </span>
                         )}
                       </td>
@@ -229,13 +229,16 @@ export function ProjectTable({ projects, clients }: ProjectTableProps) {
                   name="client_id"
                   className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#d8d0c8] text-sm text-[#3a302a]"
                 >
-                  <option value="">Unassigned</option>
+                  <option value="">No Client (Internal Studio Project / Direct Showcase)</option>
                   {clients.map((c) => (
                     <option key={c.id} value={c.id}>
                       {c.name} ({c.email}) {c.company ? `— ${c.company}` : ""}
                     </option>
                   ))}
                 </select>
+                <p className="text-[11px] text-[#8c827a] mt-1">
+                  Select &ldquo;No Client&rdquo; to add studio internal products or direct portfolio showcases.
+                </p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -261,10 +264,10 @@ export function ProjectTable({ projects, clients }: ProjectTableProps) {
                     name="status"
                     className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#d8d0c8] text-sm text-[#3a302a]"
                   >
+                    <option value="DELIVERED">Delivered (Ready for Showcase)</option>
+                    <option value="COMPLETED">Completed</option>
                     <option value="IN_PROGRESS">In Progress</option>
                     <option value="ACCEPTED">Accepted</option>
-                    <option value="DELIVERED">Delivered</option>
-                    <option value="COMPLETED">Completed</option>
                     <option value="ON_HOLD">On Hold</option>
                   </select>
                 </div>
@@ -315,6 +318,24 @@ export function ProjectTable({ projects, clients }: ProjectTableProps) {
                   placeholder="Next.js 16, TypeScript, Tailwind CSS, Supabase"
                   className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#d8d0c8] text-sm text-[#3a302a]"
                 />
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-[#faf5ee] border border-[#d8d0c8]/80 space-y-1.5">
+                <div className="flex items-center gap-2.5">
+                  <input
+                    type="checkbox"
+                    id="table_published"
+                    name="published"
+                    value="true"
+                    className="w-4 h-4 rounded border-[#d8d0c8] text-[#c2652a] focus:ring-[#c2652a] accent-[#c2652a]"
+                  />
+                  <label htmlFor="table_published" className="text-xs font-semibold text-[#3a302a] cursor-pointer">
+                    Publish to public /work showcase (Marks as Delivered)
+                  </label>
+                </div>
+                <p className="text-[11px] text-[#8c827a] pl-6.5">
+                  Only projects marked as delivered and published by admin will be displayed on the public /work page.
+                </p>
               </div>
 
               <div className="pt-4 border-t border-[#d8d0c8]/60 flex items-center justify-end gap-3">

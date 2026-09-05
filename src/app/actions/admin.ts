@@ -113,7 +113,7 @@ export async function createProjectFromRequestAction(formData: FormData) {
   return { success: true, projectId: project.id };
 }
 
-// 3. Create Standalone Project
+// 3. Create Standalone Project (Supports No Client Studio Projects & Immediate Delivery/Publishing)
 export async function createProjectAction(formData: FormData) {
   const user = await verifyAdmin();
   const adminClient = createAdminClient();
@@ -122,28 +122,57 @@ export async function createProjectAction(formData: FormData) {
   const description = formData.get("description") as string;
   const clientId = (formData.get("client_id") as string) || null;
   const category = (formData.get("category") as string) || "web";
-  const status = (formData.get("status") as ProjectStatus) || "IN_PROGRESS";
+  let status = (formData.get("status") as ProjectStatus) || "IN_PROGRESS";
   const websiteUrl = formData.get("website_url") as string;
   const previewUrl = formData.get("preview_url") as string;
   const techStr = formData.get("technologies") as string;
+  const published = formData.get("published") === "true";
+
+  // If publishing to /work, ensure status is marked as DELIVERED or COMPLETED
+  if (published && status !== "COMPLETED") {
+    status = "DELIVERED";
+  }
 
   const technologies = techStr
     ? techStr.split(",").map((s) => s.trim()).filter(Boolean)
     : [];
 
+  // Case study metadata
+  const tagline = formData.get("tagline") as string | null;
+  const challenge = formData.get("challenge") as string | null;
+  const solution = formData.get("solution") as string | null;
+  const outcome = formData.get("outcome") as string | null;
+  const featuresStr = formData.get("features") as string | null;
+
+  const case_study: Record<string, unknown> = {};
+  if (tagline) case_study.tagline = tagline;
+  if (challenge) case_study.challenge = challenge;
+  if (solution) case_study.solution = solution;
+  if (outcome) case_study.outcome = outcome;
+  if (featuresStr) {
+    case_study.features = featuresStr.split(",").map((s) => s.trim()).filter(Boolean);
+  }
+
+  const insertData: Record<string, unknown> = {
+    title,
+    description: description || null,
+    client_id: clientId,
+    category,
+    status,
+    website_url: websiteUrl || null,
+    preview_url: previewUrl || null,
+    technologies,
+    published,
+    case_study: Object.keys(case_study).length > 0 ? case_study : null,
+  };
+
+  if (status === "DELIVERED" || status === "COMPLETED" || published) {
+    insertData.delivered_at = new Date().toISOString();
+  }
+
   const { data: project, error } = await adminClient
     .from("projects")
-    .insert({
-      title,
-      description,
-      client_id: clientId,
-      category,
-      status,
-      website_url: websiteUrl || null,
-      preview_url: previewUrl || null,
-      technologies,
-      published: false,
-    })
+    .insert(insertData)
     .select()
     .single();
 
@@ -151,12 +180,16 @@ export async function createProjectAction(formData: FormData) {
 
   await adminClient.from("project_updates").insert({
     project_id: project.id,
-    status: "Created",
-    message: "Project record initialized in Nexora management system.",
+    status: status === "DELIVERED" ? "Delivered & Published" : "Created",
+    message: clientId
+      ? "Project record initialized in Nexora management system."
+      : "Studio internal project / showcase created by administrator.",
     created_by: user.id,
   });
 
   revalidatePath("/admin/projects");
+  revalidatePath("/admin/work");
+  revalidatePath("/work");
   return { success: true, projectId: project.id };
 }
 
@@ -170,11 +203,16 @@ export async function updateProjectAction(formData: FormData) {
   const description = formData.get("description") as string;
   const clientId = (formData.get("client_id") as string) || null;
   const category = formData.get("category") as string;
-  const status = formData.get("status") as ProjectStatus;
+  let status = formData.get("status") as ProjectStatus;
   const websiteUrl = formData.get("website_url") as string;
   const previewUrl = formData.get("preview_url") as string;
   const techStr = formData.get("technologies") as string;
   const published = formData.get("published") === "true";
+
+  // If publishing, ensure status is marked DELIVERED if not already completed
+  if (published && status !== "COMPLETED" && status !== "DELIVERED") {
+    status = "DELIVERED";
+  }
 
   const technologies = techStr
     ? techStr.split(",").map((s) => s.trim()).filter(Boolean)
@@ -182,7 +220,7 @@ export async function updateProjectAction(formData: FormData) {
 
   const updateData: Record<string, unknown> = {
     title,
-    description,
+    description: description || null,
     client_id: clientId,
     category,
     status,
@@ -193,7 +231,32 @@ export async function updateProjectAction(formData: FormData) {
     updated_at: new Date().toISOString(),
   };
 
-  if (status === "DELIVERED" || status === "COMPLETED") {
+  // Case study fields if submitted
+  const tagline = formData.get("tagline") as string | null;
+  const challenge = formData.get("challenge") as string | null;
+  const solution = formData.get("solution") as string | null;
+  const outcome = formData.get("outcome") as string | null;
+  const featuresStr = formData.get("features") as string | null;
+
+  if (
+    tagline !== null ||
+    challenge !== null ||
+    solution !== null ||
+    outcome !== null ||
+    featuresStr !== null
+  ) {
+    const case_study: Record<string, unknown> = {};
+    if (tagline) case_study.tagline = tagline;
+    if (challenge) case_study.challenge = challenge;
+    if (solution) case_study.solution = solution;
+    if (outcome) case_study.outcome = outcome;
+    if (featuresStr) {
+      case_study.features = featuresStr.split(",").map((s) => s.trim()).filter(Boolean);
+    }
+    updateData.case_study = case_study;
+  }
+
+  if (status === "DELIVERED" || status === "COMPLETED" || published) {
     updateData.delivered_at = new Date().toISOString();
   }
 
@@ -240,19 +303,41 @@ export async function addProjectUpdateAction(
   return { success: true };
 }
 
-// 6. Toggle Work Page Publishing
+// 6. Toggle Work Page Publishing (Restricts to Delivered Projects)
 export async function toggleWorkPublishAction(projectId: string, published: boolean) {
   await verifyAdmin();
   const adminClient = createAdminClient();
 
+  const updateData: Record<string, unknown> = {
+    published,
+    updated_at: new Date().toISOString(),
+  };
+
+  if (published) {
+    // Ensure project is delivered when publishing to public showcase
+    const { data: currentProject } = await adminClient
+      .from("projects")
+      .select("status, delivered_at")
+      .eq("id", projectId)
+      .single();
+
+    if (currentProject && currentProject.status !== "COMPLETED") {
+      updateData.status = "DELIVERED";
+    }
+    if (!currentProject?.delivered_at) {
+      updateData.delivered_at = new Date().toISOString();
+    }
+  }
+
   const { error } = await adminClient
     .from("projects")
-    .update({ published, updated_at: new Date().toISOString() })
+    .update(updateData)
     .eq("id", projectId);
 
   if (error) throw new Error(error.message);
 
   revalidatePath("/admin/work");
+  revalidatePath("/admin/projects");
   revalidatePath("/work");
   return { success: true };
 }

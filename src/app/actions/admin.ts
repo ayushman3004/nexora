@@ -342,21 +342,47 @@ export async function toggleWorkPublishAction(projectId: string, published: bool
   return { success: true };
 }
 
-// 7. Moderate Product Review (APPROVE / REJECT)
+// 7. Moderate Product / Project Review (APPROVE / REJECT)
 export async function moderateReviewAction(reviewId: string, status: ReviewStatus) {
   await verifyAdmin();
   const adminClient = createAdminClient();
 
-  const { error } = await adminClient
+  const { data: rev, error } = await adminClient
     .from("reviews")
     .update({ status, updated_at: new Date().toISOString() })
-    .eq("id", reviewId);
+    .eq("id", reviewId)
+    .select("product_id")
+    .maybeSingle();
 
   if (error) throw new Error(error.message);
+
+  // If this review belongs to a project, update project case_study.testimonial status
+  if (rev?.product_id) {
+    const { data: proj } = await adminClient
+      .from("projects")
+      .select("case_study")
+      .eq("id", rev.product_id)
+      .maybeSingle();
+
+    if (proj?.case_study?.testimonial) {
+      const caseStudy = {
+        ...proj.case_study,
+        testimonial: {
+          ...proj.case_study.testimonial,
+          status,
+        },
+      };
+      await adminClient
+        .from("projects")
+        .update({ case_study: caseStudy, updated_at: new Date().toISOString() })
+        .eq("id", rev.product_id);
+    }
+  }
 
   revalidatePath("/admin/reviews");
   revalidatePath("/products");
   revalidatePath("/dashboard/reviews");
+  revalidatePath("/work");
   return { success: true };
 }
 
@@ -365,12 +391,38 @@ export async function deleteReviewAction(reviewId: string) {
   await verifyAdmin();
   const adminClient = createAdminClient();
 
+  const { data: rev } = await adminClient
+    .from("reviews")
+    .select("product_id")
+    .eq("id", reviewId)
+    .maybeSingle();
+
   const { error } = await adminClient.from("reviews").delete().eq("id", reviewId);
 
   if (error) throw new Error(error.message);
 
+  // If deleted review belonged to a project, clear case_study testimonial
+  if (rev?.product_id) {
+    const { data: proj } = await adminClient
+      .from("projects")
+      .select("case_study")
+      .eq("id", rev.product_id)
+      .maybeSingle();
+
+    if (proj?.case_study?.testimonial) {
+      const caseStudy = { ...proj.case_study };
+      delete caseStudy.testimonial;
+      await adminClient
+        .from("projects")
+        .update({ case_study: caseStudy, updated_at: new Date().toISOString() })
+        .eq("id", rev.product_id);
+    }
+  }
+
   revalidatePath("/admin/reviews");
   revalidatePath("/products");
+  revalidatePath("/work");
+  revalidatePath("/dashboard/reviews");
   return { success: true };
 }
 

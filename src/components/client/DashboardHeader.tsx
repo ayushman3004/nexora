@@ -29,7 +29,7 @@ export function DashboardHeader({ profile }: DashboardHeaderProps) {
   const navItems = [
     { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
     { name: "My Projects", href: "/dashboard/projects", icon: FolderKanban },
-    { name: "Product Reviews", href: "/dashboard/reviews", icon: Star },
+    { name: "Project Reviews", href: "/dashboard/reviews", icon: Star },
   ];
 
   const isActive = (href: string) => {

@@ -70,6 +70,14 @@ export interface Project {
     features?: string[];
     outcome?: string;
     metrics?: { label: string; value: string }[];
+    testimonial?: {
+      rating?: number;
+      review?: string;
+      client_name?: string;
+      client_company?: string;
+      date?: string;
+      status?: string;
+    };
   } | null;
   created_at: string;
   updated_at: string;

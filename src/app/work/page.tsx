@@ -17,6 +17,8 @@ import {
   Maximize2,
   MapPin,
   TrendingUp,
+  Star,
+  Quote,
 } from "lucide-react";
 import { useModal } from "@/context/ModalContext";
 import { SectionBadge } from "@/components/ui/SectionBadge";
@@ -46,6 +48,13 @@ interface ProjectItem {
   link?: string;
   demoLink?: string;
   isProduct?: boolean;
+  testimonial?: {
+    rating: number;
+    review: string;
+    clientName: string;
+    company?: string;
+    date?: string;
+  };
 }
 
 export default function WorkPage() {
@@ -64,57 +73,110 @@ export default function WorkPage() {
     async function loadPublishedProjects() {
       try {
         const supabase = createClient();
-        const { data } = await supabase
-          .from("projects")
-          .select("*")
-          .eq("published", true)
-          .in("status", ["DELIVERED", "COMPLETED"])
-          .order("created_at", { ascending: false });
+        const [projectsRes, reviewsRes] = await Promise.all([
+          supabase
+            .from("projects")
+            .select("*")
+            .eq("published", true)
+            .in("status", ["DELIVERED", "COMPLETED"])
+            .order("created_at", { ascending: false }),
+          supabase
+            .from("reviews")
+            .select("*, profiles(name, company)")
+            .eq("status", "APPROVED"),
+        ]);
+
+        const data = projectsRes.data;
+        const approvedReviews = reviewsRes.data || [];
+
+        const reviewsByProjectId: Record<string, any> = {};
+        for (const r of approvedReviews) {
+          if (r.product_id) {
+            reviewsByProjectId[r.product_id] = r;
+          }
+        }
 
         if (data && data.length > 0) {
-          const mapped: ProjectItem[] = (data as Project[]).map((item) => ({
-            id: item.id,
-            title: item.title,
-            clientName: item.title,
-            category: (item.category as "web" | "product") || "web",
-            categoryLabel:
-              item.category === "product"
-                ? "GROVIX Product Studio"
-                : "Client Digital Platform",
-            badgeLabel:
-              item.category === "product"
-                ? "GROVIX PRODUCT"
-                : "LIVE CLIENT WEBSITE",
-            tagline:
-              item.description || "High-performance digital engineering by GROVIX.",
-            description:
-              item.description ||
-              "A custom engineered digital platform designed for high performance.",
-            challenge:
-              item.case_study?.challenge ||
-              "Scaling modern digital architecture and user acquisition.",
-            solution:
-              item.case_study?.solution ||
-              "GROVIX engineered an ultra-fast, mobile-first web architecture.",
-            features:
-              item.case_study?.features ||
-              (item.technologies && item.technologies.length > 0
-                ? item.technologies
-                : ["Responsive Web Architecture", "High-Performance Edge CDN"]),
-            tech:
-              item.technologies && item.technologies.length > 0
-                ? item.technologies
-                : ["Next.js", "TypeScript", "Tailwind CSS"],
-            outcome:
-              item.case_study?.outcome ||
-              "Production deployment with superior performance and user conversion.",
-            metrics: item.case_study?.metrics,
-            icon: item.category === "product" ? Layers : Store,
-            featured: true,
-            demoLink: item.website_url || item.preview_url || undefined,
-            link: item.website_url || undefined,
-            isProduct: item.category === "product",
-          }));
+          const mapped: ProjectItem[] = (data as Project[]).map((item) => {
+            const itemReview = reviewsByProjectId[item.id];
+            const itemCaseStudyTestimonial = item.case_study?.testimonial;
+
+            let testimonial: ProjectItem["testimonial"] = undefined;
+            if (itemReview) {
+              testimonial = {
+                rating: itemReview.rating || 5,
+                review: itemReview.review,
+                clientName:
+                  itemReview.profiles?.name ||
+                  itemCaseStudyTestimonial?.client_name ||
+                  "Verified Client",
+                company:
+                  itemReview.profiles?.company ||
+                  itemCaseStudyTestimonial?.client_company ||
+                  item.title,
+                date: itemReview.created_at,
+              };
+            } else if (
+              itemCaseStudyTestimonial &&
+              itemCaseStudyTestimonial.review &&
+              itemCaseStudyTestimonial.status !== "REJECTED"
+            ) {
+              testimonial = {
+                rating: itemCaseStudyTestimonial.rating || 5,
+                review: itemCaseStudyTestimonial.review,
+                clientName:
+                  itemCaseStudyTestimonial.client_name || "Verified Client",
+                company:
+                  itemCaseStudyTestimonial.client_company || item.title,
+                date: itemCaseStudyTestimonial.date,
+              };
+            }
+
+            return {
+              id: item.id,
+              title: item.title,
+              clientName: item.title,
+              category: (item.category as "web" | "product") || "web",
+              categoryLabel:
+                item.category === "product"
+                  ? "GROVIX Product Studio"
+                  : "Client Digital Platform",
+              badgeLabel:
+                item.category === "product"
+                  ? "GROVIX PRODUCT"
+                  : "LIVE CLIENT WEBSITE",
+              tagline:
+                item.description || "High-performance digital engineering by GROVIX.",
+              description:
+                item.description ||
+                "A custom engineered digital platform designed for high performance.",
+              challenge:
+                item.case_study?.challenge ||
+                "Scaling modern digital architecture and user acquisition.",
+              solution:
+                item.case_study?.solution ||
+                "GROVIX engineered an ultra-fast, mobile-first web architecture.",
+              features:
+                item.case_study?.features ||
+                (item.technologies && item.technologies.length > 0
+                  ? item.technologies
+                  : ["Responsive Web Architecture", "High-Performance Edge CDN"]),
+              tech:
+                item.technologies && item.technologies.length > 0
+                  ? item.technologies
+                  : ["Next.js", "TypeScript", "Tailwind CSS"],
+              outcome:
+                item.case_study?.outcome ||
+                "Production deployment with superior performance and user conversion.",
+              metrics: item.case_study?.metrics,
+              icon: item.category === "product" ? Layers : Store,
+              featured: true,
+              demoLink: item.website_url || item.preview_url || undefined,
+              link: item.website_url || undefined,
+              isProduct: item.category === "product",
+              testimonial,
+            };
+          });
           setDbProjects(mapped);
         } else {
           setDbProjects([]);
@@ -443,6 +505,59 @@ export default function WorkPage() {
                     </div>
                   </div>
 
+                  {/* Verified Client Testimonial Card */}
+                  {project.testimonial && (
+                    <div className="p-6 rounded-2xl bg-[#f6f0e8] border border-[#c2652a]/30 shadow-warm-sm space-y-3">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-0.5">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <Star
+                                key={star}
+                                className={`w-4 h-4 ${
+                                  star <= project.testimonial!.rating
+                                    ? "fill-[#c2652a] text-[#c2652a]"
+                                    : "text-[#d8d0c8]"
+                                }`}
+                              />
+                            ))}
+                          </div>
+                          <span className="text-xs font-bold text-[#c2652a] font-mono">
+                            {project.testimonial.rating}.0 / 5.0
+                          </span>
+                        </div>
+
+                        <span className="inline-flex items-center gap-1.5 text-[11px] font-mono font-semibold uppercase tracking-wider text-[#2e2621] bg-[#c2652a]/15 border border-[#c2652a]/30 px-3 py-1 rounded-full">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#c2652a]" />
+                          <span>Verified Client Review</span>
+                        </span>
+                      </div>
+
+                      <blockquote className="text-sm sm:text-base text-[#3a302a] font-serif italic leading-relaxed">
+                        &ldquo;{project.testimonial.review}&rdquo;
+                      </blockquote>
+
+                      <div className="pt-2.5 border-t border-[#d8d0c8]/60 flex items-center justify-between text-xs text-[#605850]">
+                        <div className="font-semibold text-[#3a302a] flex items-center gap-1.5">
+                          <span>{project.testimonial.clientName}</span>
+                          {project.testimonial.company && (
+                            <span className="font-normal text-[#8c827a]">
+                              • {project.testimonial.company}
+                            </span>
+                          )}
+                        </div>
+                        {project.testimonial.date && (
+                          <span className="text-[11px] font-mono text-[#8c827a]">
+                            Delivered & Verified {new Date(project.testimonial.date).toLocaleDateString("en-US", {
+                              month: "short",
+                              year: "numeric",
+                            })}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Features + Tech + Outcome Footer Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2 border-t border-[#d8d0c8]/60">
                     {/* Key Features */}
@@ -558,6 +673,86 @@ export default function WorkPage() {
           categoryLabel={fullscreenProject.categoryLabel}
           tagline={fullscreenProject.tagline}
         />
+      )}
+
+      {/* ============================================================ */}
+      {/* 4.5. VERIFIED CLIENT TESTIMONIALS SECTION */}
+      {/* ============================================================ */}
+      {dbProjects.filter((p) => p.testimonial).length > 0 && (
+        <section className="py-16 md:py-24 border-t border-[#d8d0c8]/60 bg-[#f6f0e8]/50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+            <div className="text-center max-w-2xl mx-auto space-y-3">
+              <SectionBadge icon={Star} variant="primary">
+                PROVEN CLIENT IMPACT
+              </SectionBadge>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-[#3a302a]">
+                What Founders Say About{" "}
+                <span className="italic text-[#c2652a]">GROVIX</span>
+              </h2>
+              <p className="text-sm sm:text-base text-[#605850]">
+                Verified ratings and real feedback from client founders whose digital
+                platforms and websites we engineered and delivered.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {dbProjects
+                .filter((p) => p.testimonial)
+                .map((proj) => (
+                  <div
+                    key={`testimonial-${proj.id}`}
+                    className="p-6 rounded-3xl bg-white/90 border border-[#d8d0c8]/70 shadow-warm-sm flex flex-col justify-between space-y-4 hover:shadow-warm-md transition-all"
+                  >
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1">
+                          {[1, 2, 3, 4, 5].map((s) => (
+                            <Star
+                              key={s}
+                              className={`w-4 h-4 ${
+                                s <= proj.testimonial!.rating
+                                  ? "fill-[#c2652a] text-[#c2652a]"
+                                  : "text-[#d8d0c8]"
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#c2652a] bg-[#c2652a]/10 px-2.5 py-0.5 rounded-full">
+                          {proj.title}
+                        </span>
+                      </div>
+
+                      <blockquote className="text-sm text-[#3a302a] font-serif italic leading-relaxed">
+                        &ldquo;{proj.testimonial!.review}&rdquo;
+                      </blockquote>
+                    </div>
+
+                    <div className="pt-3 border-t border-[#d8d0c8]/50 flex items-center justify-between text-xs">
+                      <div>
+                        <div className="font-semibold text-[#3a302a]">
+                          {proj.testimonial!.clientName}
+                        </div>
+                        <div className="text-[11px] text-[#8c827a]">
+                          {proj.testimonial!.company || proj.title}
+                        </div>
+                      </div>
+                      {proj.demoLink && (
+                        <a
+                          href={proj.demoLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[11px] text-[#c2652a] hover:underline font-semibold inline-flex items-center gap-1"
+                        >
+                          <span>Visit Site</span>
+                          <ArrowUpRight className="w-3 h-3" />
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+        </section>
       )}
 
       {/* ============================================================ */}

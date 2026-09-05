@@ -1,15 +1,40 @@
 "use client";
 
 import React, { useState, useTransition } from "react";
-import { Star, CheckCircle2, AlertCircle, ArrowRight, ChevronDown } from "lucide-react";
+import { Star, CheckCircle2, AlertCircle, ArrowRight, ChevronDown, FolderKanban, Sparkles } from "lucide-react";
 import type { Product } from "@/types/database";
 
+export interface ReviewableItem {
+  id: string;
+  name: string;
+  type: "project" | "product";
+  status?: string;
+  category?: string;
+  description?: string | null;
+}
+
 interface ReviewFormProps {
-  products: Product[];
+  products?: Product[];
+  items?: ReviewableItem[];
   onSubmitReview: (formData: FormData) => Promise<{ success?: boolean; error?: string }>;
 }
 
-export function ReviewForm({ products, onSubmitReview }: ReviewFormProps) {
+export function ReviewForm({ products = [], items, onSubmitReview }: ReviewFormProps) {
+  // Normalize items
+  const allItems: ReviewableItem[] = items || products.map((p) => ({
+    id: p.id,
+    name: p.name,
+    type: "product",
+    description: p.description,
+  }));
+
+  const projectItems = allItems.filter((i) => i.type === "project");
+  const productItems = allItems.filter((i) => i.type === "product");
+
+  // Default selection: First assigned project if available, otherwise first item
+  const defaultSelectedId = projectItems[0]?.id || allItems[0]?.id || "";
+  const [selectedId, setSelectedId] = useState<string>(defaultSelectedId);
+
   const [rating, setRating] = useState<number>(5);
   const [hoverRating, setHoverRating] = useState<number>(0);
   const [isPending, startTransition] = useTransition();
@@ -24,6 +49,7 @@ export function ReviewForm({ products, onSubmitReview }: ReviewFormProps) {
     const form = e.currentTarget;
     const formData = new FormData(form);
     formData.set("rating", rating.toString());
+    formData.set("product_id", selectedId);
 
     startTransition(async () => {
       const result = await onSubmitReview(formData);
@@ -32,7 +58,7 @@ export function ReviewForm({ products, onSubmitReview }: ReviewFormProps) {
       } else {
         setStatusMessage({
           type: "success",
-          text: "Review submitted! It will appear publicly on the GROVIX Products page once approved.",
+          text: "Review submitted successfully! It is now live in the portfolio and work showcase.",
         });
         form.reset();
         setRating(5);
@@ -43,9 +69,15 @@ export function ReviewForm({ products, onSubmitReview }: ReviewFormProps) {
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 sm:p-8 border border-[#d8d0c8]/70 shadow-warm-md">
       <div className="mb-6">
-        <h3 className="text-xl font-serif text-[#3a302a]">Share Your Product Experience</h3>
+        <h3 className="text-xl font-serif text-[#3a302a]">
+          {projectItems.length > 0
+            ? "Share Your Project Experience & Testimonial"
+            : "Share Your Product Experience"}
+        </h3>
         <p className="text-xs text-[#605850] mt-1 font-sans">
-          Your feedback helps us continuously refine GROVIX software products and tools.
+          {projectItems.length > 0
+            ? "Your feedback and review will be featured alongside your delivered project in our live portfolio."
+            : "Your feedback helps us continuously refine GROVIX software products and client architectures."}
         </p>
       </div>
 
@@ -67,29 +99,50 @@ export function ReviewForm({ products, onSubmitReview }: ReviewFormProps) {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-5">
-        {/* Product Selector */}
+        {/* Project / Product Selector */}
         <div>
           <label
             htmlFor="product_id"
             className="block text-xs font-mono uppercase tracking-wider text-[#8c827a] mb-2"
           >
-            Select Product
+            {projectItems.length > 0 ? "Select Assigned Project" : "Select Product / Project"}
           </label>
           <div className="relative">
             <select
               id="product_id"
               name="product_id"
+              value={selectedId}
+              onChange={(e) => setSelectedId(e.target.value)}
               required
-              className="w-full px-4 py-3 rounded-xl bg-[#faf5ee]/60 border border-[#d8d0c8] text-[#3a302a] text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#c2652a]/40 focus:border-[#c2652a] transition-all cursor-pointer"
+              className="w-full px-4 py-3 rounded-xl bg-[#faf5ee]/60 border border-[#d8d0c8] text-[#3a302a] text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#c2652a]/40 focus:border-[#c2652a] transition-all cursor-pointer font-medium"
             >
-              {products.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name}
-                </option>
-              ))}
+              {projectItems.length > 0 && (
+                <optgroup label="✨ Your Assigned Projects">
+                  {projectItems.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name} {p.status ? `• ${p.status}` : ""}
+                    </option>
+                  ))}
+                </optgroup>
+              )}
+              {productItems.length > 0 && (
+                <optgroup label="GROVIX Studio Products">
+                  {productItems.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
+                  ))}
+                </optgroup>
+              )}
             </select>
             <ChevronDown className="w-4 h-4 text-[#8c827a] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
+
+          {projectItems.length === 0 && (
+            <p className="text-[11px] text-[#8c827a] mt-1.5 font-sans">
+              No delivered client projects are currently linked to this account. Once a project is assigned by the studio, you can select it directly here.
+            </p>
+          )}
         </div>
 
         {/* Interactive Star Rating */}
@@ -117,27 +170,27 @@ export function ReviewForm({ products, onSubmitReview }: ReviewFormProps) {
                 />
               </button>
             ))}
-            <span className="text-xs font-mono text-[#8c827a] ml-2">
-              {rating}/5
+            <span className="text-xs font-mono text-[#8c827a] ml-2 font-bold">
+              {rating}/5 Stars
             </span>
           </div>
         </div>
 
-        {/* Public Testimonial */}
+        {/* Public Testimonial / Review */}
         <div>
           <label
             htmlFor="review"
             className="block text-xs font-mono uppercase tracking-wider text-[#8c827a] mb-2"
           >
-            Public Review
+            Public Testimonial & Review
           </label>
           <textarea
             id="review"
             name="review"
             required
-            rows={3}
-            placeholder="Describe your workflow transformation, uptime reliability, or user experience..."
-            className="w-full px-4 py-3 rounded-xl bg-[#faf5ee]/60 border border-[#d8d0c8] text-[#3a302a] text-sm placeholder-[#8c827a]/60 focus:outline-none focus:ring-2 focus:ring-[#c2652a]/40 focus:border-[#c2652a] transition-all resize-y"
+            rows={4}
+            placeholder="Share your experience working with GROVIX Studio on this project (design aesthetics, engineering quality, communication, delivery, business impact)..."
+            className="w-full px-4 py-3 rounded-xl bg-[#faf5ee]/60 border border-[#d8d0c8] text-[#3a302a] text-sm placeholder-[#8c827a]/60 focus:outline-none focus:ring-2 focus:ring-[#c2652a]/40 focus:border-[#c2652a] transition-all resize-y leading-relaxed"
           />
         </div>
 
@@ -153,7 +206,7 @@ export function ReviewForm({ products, onSubmitReview }: ReviewFormProps) {
             id="feedback"
             name="feedback"
             rows={2}
-            placeholder="Feature requests, bugs, or technical suggestions visible only to the GROVIX product engineering team..."
+            placeholder="Any confidential feedback or suggestions visible only to the GROVIX studio team..."
             className="w-full px-4 py-3 rounded-xl bg-[#faf5ee]/60 border border-[#d8d0c8] text-[#3a302a] text-sm placeholder-[#8c827a]/60 focus:outline-none focus:ring-2 focus:ring-[#c2652a]/40 focus:border-[#c2652a] transition-all resize-y"
           />
         </div>
@@ -163,7 +216,7 @@ export function ReviewForm({ products, onSubmitReview }: ReviewFormProps) {
           disabled={isPending}
           className="w-full sm:w-auto px-7 py-3 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white font-semibold text-xs sm:text-sm shadow-warm-sm hover:shadow-warm-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
         >
-          <span>{isPending ? "Submitting..." : "Submit Review"}</span>
+          <span>{isPending ? "Submitting Review..." : "Submit Review"}</span>
           <ArrowRight className="w-4 h-4" />
         </button>
       </form>

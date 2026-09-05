@@ -14,6 +14,7 @@ import {
   ExternalLink,
   Menu,
   X,
+  Shield,
 } from "lucide-react";
 import type { Profile } from "@/types/database";
 
@@ -76,11 +77,30 @@ export function DashboardHeader({ profile }: DashboardHeaderProps) {
                 </Link>
               );
             })}
+
+            {profile?.role === "admin" && (
+              <Link
+                href="/admin"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#3a302a] hover:bg-[#201a17] text-white text-xs font-semibold shadow-warm-sm transition-all ml-2"
+              >
+                <Shield className="w-3.5 h-3.5 text-[#f0a878]" />
+                <span>Admin Console</span>
+              </Link>
+            )}
           </nav>
         </div>
 
         {/* User Info & Actions */}
         <div className="hidden md:flex items-center gap-4">
+          {profile?.role === "admin" && (
+            <Link
+              href="/admin/requests"
+              className="text-xs px-3 py-1 rounded-full bg-[#c2652a]/10 hover:bg-[#c2652a]/20 text-[#c2652a] font-medium border border-[#c2652a]/30 transition-colors flex items-center gap-1.5"
+            >
+              <span>Review Requests</span>
+            </Link>
+          )}
+
           <Link
             href="/"
             target="_blank"
@@ -150,6 +170,17 @@ export function DashboardHeader({ profile }: DashboardHeaderProps) {
               </Link>
             );
           })}
+
+          {profile?.role === "admin" && (
+            <Link
+              href="/admin"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-semibold bg-[#3a302a] text-white shadow-warm-sm"
+            >
+              <Shield className="w-4 h-4 text-[#f0a878]" />
+              <span>Admin Console</span>
+            </Link>
+          )}
           <div className="pt-2 border-t border-[#d8d0c8]/40 flex items-center justify-between">
             <span className="text-xs text-[#605850]">{profile?.name || "Client"}</span>
             <form action={logoutAction}>

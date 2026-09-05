@@ -38,6 +38,20 @@ export async function loginAction(formData: FormData): Promise<AuthActionResult>
       .eq("id", data.user.id)
       .single();
 
+    // Link any inquiries previously submitted with this email
+    if (data.user.email) {
+      try {
+        const adminClient = createAdminClient();
+        await adminClient
+          .from("project_requests")
+          .update({ client_id: data.user.id })
+          .ilike("email", data.user.email.trim())
+          .is("client_id", null);
+      } catch (linkErr) {
+        console.warn("Could not link inquiries on login:", linkErr);
+      }
+    }
+
     if (profile?.role === "admin") {
       return { success: true, redirectTo: "/admin" };
     }
@@ -91,6 +105,17 @@ export async function registerAction(formData: FormData): Promise<AuthActionResu
       role: "client",
       updated_at: new Date().toISOString(),
     });
+
+    // Link any previously submitted inquiries matching this email
+    try {
+      await adminClient
+        .from("project_requests")
+        .update({ client_id: newUser.user.id })
+        .ilike("email", email.trim())
+        .is("client_id", null);
+    } catch (linkErr) {
+      console.warn("Could not link inquiries on registration:", linkErr);
+    }
   }
 
   // 3. Automatically log in the user immediately

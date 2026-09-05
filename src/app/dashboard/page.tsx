@@ -1,8 +1,10 @@
 import React from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { ProjectCard } from "@/components/client/ProjectCard";
 import { ProjectUpdateList } from "@/components/client/ProjectUpdateList";
+import { ProjectApplicationsList } from "@/components/client/ProjectApplicationsList";
 import { SectionBadge } from "@/components/ui/SectionBadge";
 import {
   FolderKanban,
@@ -12,8 +14,11 @@ import {
   CheckCircle2,
   Layers,
   Star,
+  Shield,
+  Inbox,
+  FileText,
 } from "lucide-react";
-import type { Project, ProjectUpdate, Profile } from "@/types/database";
+import type { Project, ProjectUpdate, Profile, ProjectRequest } from "@/types/database";
 
 export default async function ClientDashboardPage() {
   const supabase = await createClient();
@@ -24,6 +29,7 @@ export default async function ClientDashboardPage() {
   let profile: Profile | null = null;
   let projects: Project[] = [];
   let recentUpdates: ProjectUpdate[] = [];
+  let projectRequests: ProjectRequest[] = [];
 
   if (user) {
     const { data: prof } = await supabase
@@ -40,6 +46,21 @@ export default async function ClientDashboardPage() {
       .eq("client_id", user.id)
       .order("created_at", { ascending: false });
     projects = (projs as Project[]) || [];
+
+    // Fetch submitted inquiries & applications for this user
+    try {
+      const adminClient = createAdminClient();
+      let query = adminClient.from("project_requests").select("*");
+      if (user.email) {
+        query = query.or(`client_id.eq.${user.id},email.ilike.${user.email}`);
+      } else {
+        query = query.eq("client_id", user.id);
+      }
+      const { data: reqs } = await query.order("created_at", { ascending: false });
+      projectRequests = (reqs as ProjectRequest[]) || [];
+    } catch (err) {
+      console.error("Failed to load project requests for client dashboard:", err);
+    }
 
     // Fetch latest updates across these projects
     if (projects.length > 0) {
@@ -61,6 +82,46 @@ export default async function ClientDashboardPage() {
 
   return (
     <div className="space-y-10">
+      {/* Admin Notice Banner (Only shown if signed in as Admin) */}
+      {profile?.role === "admin" && (
+        <div className="bg-[#3a302a] text-white rounded-3xl p-6 sm:p-7 shadow-warm-md flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-[#52463e]">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-[#c2652a] text-white flex items-center justify-center shrink-0">
+              <Shield className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-mono uppercase tracking-widest text-[#f0a878] font-semibold">
+                  Admin Studio Privileges
+                </span>
+              </div>
+              <h2 className="text-lg sm:text-xl font-serif text-white font-medium mt-0.5">
+                Viewing Client Portal as Administrator
+              </h2>
+              <p className="text-xs text-[#d8d0c8] font-sans mt-0.5 max-w-xl">
+                You are currently viewing the client dashboard. Live project requests, client inquiries, and studio controls are managed in the Admin Console.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2.5 shrink-0">
+            <Link
+              href="/admin/requests"
+              className="px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-semibold border border-white/20 transition-all flex items-center gap-1.5"
+            >
+              <Inbox className="w-3.5 h-3.5 text-[#f0a878]" />
+              <span>Review Requests</span>
+            </Link>
+            <Link
+              href="/admin"
+              className="px-5 py-2.5 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white text-xs font-semibold shadow-warm-sm transition-all flex items-center gap-1.5"
+            >
+              <span>Admin Console</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </div>
+      )}
+
       {/* 1. Welcome & Highlights Banner */}
       <div className="bg-white/70 backdrop-blur-md rounded-3xl p-6 sm:p-10 border border-[#d8d0c8]/70 shadow-warm-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-2 max-w-2xl">
@@ -98,7 +159,7 @@ export default async function ClientDashboardPage() {
       </div>
 
       {/* 2. Key Metrics Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <div className="p-6 rounded-3xl bg-white/70 border border-[#d8d0c8]/60 shadow-warm-sm">
           <div className="flex items-center justify-between">
             <span className="text-xs font-mono uppercase tracking-wider text-[#8c827a]">
@@ -110,7 +171,22 @@ export default async function ClientDashboardPage() {
             {activeProjects.length}
           </p>
           <span className="text-[11px] text-[#605850] mt-1 block font-sans">
-            In development or review
+            In development or sprint review
+          </span>
+        </div>
+
+        <div className="p-6 rounded-3xl bg-white/70 border border-[#d8d0c8]/60 shadow-warm-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-mono uppercase tracking-wider text-[#8c827a]">
+              Submitted Inquiries
+            </span>
+            <FileText className="w-4 h-4 text-[#c2652a]" />
+          </div>
+          <p className="text-3xl sm:text-4xl font-serif text-[#3a302a] mt-3 font-medium">
+            {projectRequests.length}
+          </p>
+          <span className="text-[11px] text-[#605850] mt-1 block font-sans">
+            Applications under review
           </span>
         </div>
 
@@ -145,68 +221,95 @@ export default async function ClientDashboardPage() {
         </div>
       </div>
 
-      {/* 3. Main Grid: Active Projects + Recent Updates */}
+      {/* 3. Main Grid: Active Projects / Inquiries + Recent Updates */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Column: Active Projects */}
-        <div className="lg:col-span-7 space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-serif text-[#3a302a]">
-                Active <span className="italic text-[#c2652a]">Projects</span>
-              </h2>
-              <p className="text-xs text-[#605850] mt-0.5">
-                Current engineering architectures and web builds
-              </p>
+        {/* Left Column: Active Projects & Submitted Inquiries */}
+        <div className="lg:col-span-7 space-y-8">
+          {/* Active Projects Section */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-serif text-[#3a302a]">
+                  Active <span className="italic text-[#c2652a]">Projects</span>
+                </h2>
+                <p className="text-xs text-[#605850] mt-0.5">
+                  Current engineering architectures and web builds
+                </p>
+              </div>
+              {projects.length > 0 && (
+                <Link
+                  href="/dashboard/projects"
+                  className="text-xs text-[#c2652a] hover:underline font-semibold"
+                >
+                  View all →
+                </Link>
+              )}
             </div>
-            {projects.length > 0 && (
-              <Link
-                href="/dashboard/projects"
-                className="text-xs text-[#c2652a] hover:underline font-semibold"
-              >
-                View all →
-              </Link>
+
+            {activeProjects.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {activeProjects.map((project) => (
+                  <ProjectCard key={project.id} project={project} />
+                ))}
+              </div>
+            ) : projects.length > 0 ? (
+              <div className="p-8 rounded-3xl bg-white/60 border border-[#d8d0c8]/60 text-center space-y-2">
+                <CheckCircle2 className="w-8 h-8 text-[#c2652a] mx-auto" />
+                <h3 className="text-lg font-serif text-[#3a302a]">
+                  All Projects Completed
+                </h3>
+                <p className="text-xs text-[#605850] max-w-sm mx-auto">
+                  All assigned builds have been successfully shipped. View them under
+                  the Projects tab.
+                </p>
+              </div>
+            ) : (
+              <div className="p-8 rounded-3xl bg-white/60 border border-dashed border-[#d8d0c8] text-center space-y-3">
+                <FolderKanban className="w-9 h-9 text-[#c2652a]/60 mx-auto" />
+                <h3 className="text-base font-serif text-[#3a302a]">
+                  No Live Builds in Progress
+                </h3>
+                <p className="text-xs text-[#605850] max-w-md mx-auto leading-relaxed">
+                  {projectRequests.length > 0
+                    ? "Your submitted project inquiries are shown below. Once scoped and accepted by our studio leads, your interactive build workspace will be activated here."
+                    : "If you recently submitted an inquiry or initiated a project brief, the Nexora team is reviewing your requirements. Once accepted, your project timeline and deliverables will appear right here."}
+                </p>
+                {projectRequests.length === 0 && (
+                  <div className="pt-2">
+                    <Link
+                      href="/#contact"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#c2652a] text-white text-xs font-semibold shadow-warm-sm hover:bg-[#a8521e] transition-all"
+                    >
+                      <span>Submit Project Brief</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
+                )}
+              </div>
             )}
           </div>
 
-          {activeProjects.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {activeProjects.map((project) => (
-                <ProjectCard key={project.id} project={project} />
-              ))}
-            </div>
-          ) : projects.length > 0 ? (
-            <div className="p-8 rounded-3xl bg-white/60 border border-[#d8d0c8]/60 text-center space-y-2">
-              <CheckCircle2 className="w-8 h-8 text-[#c2652a] mx-auto" />
-              <h3 className="text-lg font-serif text-[#3a302a]">
-                All Projects Completed
-              </h3>
-              <p className="text-xs text-[#605850] max-w-sm mx-auto">
-                All assigned builds have been successfully shipped. View them under
-                the Projects tab.
-              </p>
-            </div>
-          ) : (
-            <div className="p-10 rounded-3xl bg-white/60 border border-dashed border-[#d8d0c8] text-center space-y-3">
-              <FolderKanban className="w-10 h-10 text-[#c2652a]/60 mx-auto" />
-              <h3 className="text-lg font-serif text-[#3a302a]">
-                No Projects Assigned Yet
-              </h3>
-              <p className="text-xs text-[#605850] max-w-md mx-auto leading-relaxed">
-                If you recently submitted an inquiry or initiated a project brief,
-                the Nexora team is reviewing your requirements. Once accepted, your
-                project timeline and deliverables will appear right here.
-              </p>
-              <div className="pt-2">
-                <Link
-                  href="/#contact"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#c2652a] text-white text-xs font-semibold shadow-warm-sm hover:bg-[#a8521e] transition-all"
-                >
-                  <span>Submit Project Brief</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
+          {/* Submitted Inquiries & Applications Section */}
+          <div className="space-y-4 pt-2">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-serif text-[#3a302a]">
+                  Submitted <span className="italic text-[#c2652a]">Inquiries & Applications</span>
+                </h2>
+                <p className="text-xs text-[#605850] mt-0.5">
+                  Project briefs submitted to Nexora Studio for review, scoping, and acceptance
+                </p>
               </div>
+              <Link
+                href="/#contact"
+                className="text-xs text-[#c2652a] hover:underline font-semibold"
+              >
+                + New Inquiry
+              </Link>
             </div>
-          )}
+
+            <ProjectApplicationsList requests={projectRequests} />
+          </div>
         </div>
 
         {/* Right Column: Engineering Changelog / Updates */}
@@ -221,6 +324,40 @@ export default async function ClientDashboardPage() {
           </div>
 
           <ProjectUpdateList updates={recentUpdates} />
+
+          {/* Studio Inception Guide */}
+          <div className="p-6 rounded-3xl bg-white/70 border border-[#d8d0c8]/70 shadow-warm-sm space-y-4">
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#c2652a]">
+              <Sparkles className="w-4 h-4" />
+              <span>Project Inception Flow</span>
+            </div>
+            <div className="space-y-3 text-xs text-[#605850]">
+              <div className="flex gap-3">
+                <span className="w-5 h-5 rounded-full bg-[#f2ece4] text-[#3a302a] font-mono text-[11px] flex items-center justify-center shrink-0">
+                  1
+                </span>
+                <p>
+                  <strong className="text-[#3a302a]">Scope & Evaluation:</strong> Studio leads review your inquiry, timeline, and tech stack requirements.
+                </p>
+              </div>
+              <div className="flex gap-3">
+                <span className="w-5 h-5 rounded-full bg-[#f2ece4] text-[#3a302a] font-mono text-[11px] flex items-center justify-center shrink-0">
+                  2
+                </span>
+                <p>
+                  <strong className="text-[#3a302a]">Architecture & Proposal:</strong> We prepare sprint milestones and deliver an estimate.
+                </p>
+              </div>
+              <div className="flex gap-3">
+                <span className="w-5 h-5 rounded-full bg-[#f2ece4] text-[#3a302a] font-mono text-[11px] flex items-center justify-center shrink-0">
+                  3
+                </span>
+                <p>
+                  <strong className="text-[#3a302a]">Active Sprint Kickoff:</strong> Upon acceptance, your project workspace becomes live with real-time updates.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

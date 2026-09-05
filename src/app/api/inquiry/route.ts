@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 
 export async function POST(request: Request) {
   try {
@@ -15,10 +16,41 @@ export async function POST(request: Request) {
       details,
     } = body;
 
-    // 1. Persist to Supabase Database (project_requests)
+    // 1. Determine client_id if available (via active session or profile email match)
+    let clientId: string | null = null;
     try {
-      const adminClient = createAdminClient();
+      const supabase = await createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        clientId = user.id;
+      }
+    } catch {
+      // Non-critical, fallback to profile email lookup
+    }
+
+    const adminClient = createAdminClient();
+
+    if (!clientId && email) {
+      try {
+        const { data: matchedProfile } = await adminClient
+          .from("profiles")
+          .select("id")
+          .ilike("email", email.trim())
+          .maybeSingle();
+        if (matchedProfile) {
+          clientId = matchedProfile.id;
+        }
+      } catch (profErr) {
+        console.warn("Could not lookup profile for inquiry email:", profErr);
+      }
+    }
+
+    // 2. Persist to Supabase Database (project_requests)
+    try {
       await adminClient.from("project_requests").insert({
+        client_id: clientId,
         name: name || "Anonymous Client",
         email: email || "unknown@client.com",
         company: company || null,

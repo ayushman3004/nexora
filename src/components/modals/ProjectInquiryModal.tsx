@@ -14,7 +14,7 @@ export function ProjectInquiryModal() {
   // Form State
   const [service, setService] = useState<string>("build");
   const [projectType, setProjectType] = useState<string>("existing-business");
-  const [budget, setBudget] = useState<string>("$2,000 – $5,000");
+  const [budget, setBudget] = useState<string>("₹15,000 – ₹50,000 (15k – 50k)");
   const [timeline, setTimeline] = useState<string>("1 – 3 Months");
   const [formData, setFormData] = useState({
     name: "",
@@ -60,10 +60,34 @@ export function ProjectInquiryModal() {
   ];
 
   const budgetTiers = [
-    { label: "Starter", range: "$500 – $2,000", desc: "Landing page, simple website, or quick fix" },
-    { label: "Growth", range: "$2,000 – $5,000", desc: "Custom website, SEO setup, or small web app" },
-    { label: "Scale", range: "$5,000 – $15,000", desc: "Full product build, SaaS MVP, or growth campaign" },
-    { label: "Custom / Enterprise", range: "$15,000+", desc: "Complex systems, ongoing partnership, or enterprise" },
+    {
+      label: "Starter",
+      amount: "₹10,000 – ₹30,000",
+      short: "10k – 30k",
+      range: "₹10,000 – ₹30,000 (10k – 30k)",
+      desc: "Landing page, simple website, or quick turnaround",
+    },
+    {
+      label: "Growth",
+      amount: "₹15,000 – ₹50,000",
+      short: "15k – 50k",
+      range: "₹15,000 – ₹50,000 (15k – 50k)",
+      desc: "Custom website, SEO setup, or business web app",
+    },
+    {
+      label: "Scale",
+      amount: "₹50,000 – ₹1,00,000",
+      short: "50k – 100k",
+      range: "₹50,000 – ₹1,00,000 (50k – 100k)",
+      desc: "Full product build, SaaS MVP, or custom web platform",
+    },
+    {
+      label: "Custom / Enterprise",
+      amount: "₹1,00,000+",
+      short: "100k+",
+      range: "₹1,00,000+ (100k+)",
+      desc: "Complex systems, ongoing partnership, or enterprise",
+    },
   ];
 
   const timelineOptions = ["ASAP (< 2 Weeks)", "1 – 3 Months", "3 – 6 Months", "Flexible / Ongoing"];
@@ -278,8 +302,17 @@ export function ProjectInquiryModal() {
                             <span className="text-xs font-semibold text-[#c2652a] uppercase tracking-wider">{tier.label}</span>
                             {isSelected && <Check className="w-4 h-4 text-[#c2652a]" />}
                           </div>
-                          <div className="text-base font-bold text-[#3a302a]">{tier.range}</div>
-                          <div className="text-xs text-[#605850] mt-1">{tier.desc}</div>
+                          <div className="flex items-center justify-between gap-1.5">
+                            <div className="text-base font-bold text-[#3a302a]">{tier.amount}</div>
+                            <span className={`text-[11px] font-mono font-semibold px-2 py-0.5 rounded-full border ${
+                              isSelected
+                                ? "bg-[#c2652a]/10 text-[#c2652a] border-[#c2652a]/30"
+                                : "bg-[#f2ece4] text-[#8c827a] border-[#d8d0c8]/60"
+                            }`}>
+                              {tier.short}
+                            </span>
+                          </div>
+                          <div className="text-xs text-[#605850] mt-1.5">{tier.desc}</div>
                         </div>
                       );
                     })}

@@ -80,7 +80,7 @@ export function ClientBrowserPreview({
             <div className="flex items-center gap-2 overflow-hidden truncate">
               <Lock className="w-3 h-3 text-emerald-400 shrink-0" />
               <span className="truncate text-[11px] sm:text-xs text-white/90">
-                {isProduct ? "nexora.com/products/serveq" : displayUrl}
+                {isProduct ? "grovix.com/products/serveq" : displayUrl}
               </span>
             </div>
             {!isProduct && (
@@ -235,7 +235,7 @@ export function ClientBrowserPreview({
 
             <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
               <span className="text-xs text-white/60">
-                Built and maintained end-to-end by Nexora engineering.
+                Built and maintained end-to-end by GROVIX engineering.
               </span>
               <a
                 href="/products"

@@ -79,14 +79,14 @@ export default function WorkPage() {
             category: (item.category as "web" | "product") || "web",
             categoryLabel:
               item.category === "product"
-                ? "Nexora Product Studio"
+                ? "GROVIX Product Studio"
                 : "Client Digital Platform",
             badgeLabel:
               item.category === "product"
-                ? "NEXORA PRODUCT"
+                ? "GROVIX PRODUCT"
                 : "LIVE CLIENT WEBSITE",
             tagline:
-              item.description || "High-performance digital engineering by Nexora.",
+              item.description || "High-performance digital engineering by GROVIX.",
             description:
               item.description ||
               "A custom engineered digital platform designed for high performance.",
@@ -95,7 +95,7 @@ export default function WorkPage() {
               "Scaling modern digital architecture and user acquisition.",
             solution:
               item.case_study?.solution ||
-              "Nexora engineered an ultra-fast, mobile-first web architecture.",
+              "GROVIX engineered an ultra-fast, mobile-first web architecture.",
             features:
               item.case_study?.features ||
               (item.technologies && item.technologies.length > 0
@@ -133,17 +133,17 @@ export default function WorkPage() {
     {
       id: "serveq",
       title: "ServeQ — Service Orchestration & Queue Dispatch",
-      clientName: "Nexora Product Studio",
+      clientName: "GROVIX Product Studio",
       category: "product",
-      categoryLabel: "Nexora Product Studio",
-      badgeLabel: "NEXORA PRODUCT",
+      categoryLabel: "GROVIX Product Studio",
+      badgeLabel: "GROVIX PRODUCT",
       tagline: "Queue less. Serve better.",
       description:
         "Queue and service management platform designed to simplify customer flow and improve operational efficiency for restaurants, clinics, and service businesses. Eliminates physical wait lines through real-time SMS/WhatsApp notifications and automated staff triage dashboards.",
       challenge:
         "Businesses lose valuable walk-ins and customers every day because of long, unmanaged queues. Existing queue management software was bulky, expensive, and forced customers to download redundant mobile apps.",
       solution:
-        "Nexora engineered ServeQ — a lightweight, zero-install queue management system with real-time web socket queue displays, automated multi-channel notifications, staff telemetry, and wait-time prediction algorithms.",
+        "GROVIX engineered ServeQ — a lightweight, zero-install queue management system with real-time web socket queue displays, automated multi-channel notifications, staff telemetry, and wait-time prediction algorithms.",
       features: [
         "Real-time queue display & automated customer SMS/WhatsApp notifications",
         "Staff command dashboard with live wait-time triage & analytics",
@@ -181,7 +181,7 @@ export default function WorkPage() {
   const filters = [
     { id: "all", label: "All Projects" },
     { id: "web", label: "Client Websites" },
-    { id: "product", label: "Nexora Products" },
+    { id: "product", label: "GROVIX Products" },
   ];
 
   const filteredProjects =
@@ -199,7 +199,7 @@ export default function WorkPage() {
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
           <Image
             src="/images/hero-work.jpg"
-            alt="Nexora Project Gallery"
+            alt="GROVIX Project Gallery"
             fill
             priority
             className="object-cover object-center brightness-100 contrast-105"

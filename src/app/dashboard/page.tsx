@@ -136,7 +136,7 @@ export default async function ClientDashboardPage() {
           </h1>
           <p className="text-sm text-[#605850] font-sans leading-relaxed">
             Monitor real-time development sprints, track milestone deliverables,
-            and review engineering changelogs directly with the Nexora studio.
+            and review engineering changelogs directly with the GROVIX studio.
           </p>
         </div>
 
@@ -272,7 +272,7 @@ export default async function ClientDashboardPage() {
                 <p className="text-xs text-[#605850] max-w-md mx-auto leading-relaxed">
                   {projectRequests.length > 0
                     ? "Your submitted project inquiries are shown below. Once scoped and accepted by our studio leads, your interactive build workspace will be activated here."
-                    : "If you recently submitted an inquiry or initiated a project brief, the Nexora team is reviewing your requirements. Once accepted, your project timeline and deliverables will appear right here."}
+                    : "If you recently submitted an inquiry or initiated a project brief, the GROVIX team is reviewing your requirements. Once accepted, your project timeline and deliverables will appear right here."}
                 </p>
                 {projectRequests.length === 0 && (
                   <div className="pt-2">
@@ -297,7 +297,7 @@ export default async function ClientDashboardPage() {
                   Submitted <span className="italic text-[#c2652a]">Inquiries & Applications</span>
                 </h2>
                 <p className="text-xs text-[#605850] mt-0.5">
-                  Project briefs submitted to Nexora Studio for review, scoping, and acceptance
+                  Project briefs submitted to GROVIX Studio for review, scoping, and acceptance
                 </p>
               </div>
               <Link
@@ -319,7 +319,7 @@ export default async function ClientDashboardPage() {
               Milestone <span className="italic text-[#c2652a]">Changelog</span>
             </h2>
             <p className="text-xs text-[#605850] mt-0.5">
-              Recent status messages from the Nexora engineering team
+              Recent status messages from the GROVIX engineering team
             </p>
           </div>
 

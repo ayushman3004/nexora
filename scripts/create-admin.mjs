@@ -39,7 +39,7 @@ const supabase = createClient(supabaseUrl, serviceKey, {
 
 const email = process.argv[2] || "admin@nexorastudio.com";
 const password = process.argv[3] || "NexoraAdmin2026!";
-const name = process.argv[4] || "Nexora Studio Admin";
+const name = process.argv[4] || "GROVIX Studio Admin";
 
 async function main() {
   console.log(`Checking admin user: ${email}...`);

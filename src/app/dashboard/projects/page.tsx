@@ -89,7 +89,7 @@ export default async function ClientProjectsPage() {
           <h3 className="text-lg font-serif text-[#3a302a]">No Live Projects Yet</h3>
           <p className="text-xs text-[#605850] leading-relaxed">
             {projectRequests.length > 0
-              ? "You currently have no active project builds initialized. Your submitted inquiries are being reviewed by the Nexora team below:"
+              ? "You currently have no active project builds initialized. Your submitted inquiries are being reviewed by the GROVIX team below:"
               : "You currently have no active or completed projects assigned. Once your project inquiry is accepted, it will appear here."}
           </p>
         </div>

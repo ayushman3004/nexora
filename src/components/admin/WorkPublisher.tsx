@@ -92,7 +92,7 @@ export function WorkPublisher({ projects }: WorkPublisherProps) {
           </h2>
           <p className="text-xs text-[#605850] mt-1 max-w-xl leading-relaxed">
             Only delivered projects marked as &ldquo;Published&rdquo; render on the live
-            Nexora <Link href="/work" target="_blank" className="text-[#c2652a] underline font-medium">/work</Link> page.
+            GROVIX <Link href="/work" target="_blank" className="text-[#c2652a] underline font-medium">/work</Link> page.
             You can add internal studio projects or client showcases without needing a client account.
           </p>
         </div>
@@ -272,7 +272,7 @@ export function WorkPublisher({ projects }: WorkPublisherProps) {
                     className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#d8d0c8] text-sm text-[#3a302a]"
                   >
                     <option value="web">Client Website (category: web)</option>
-                    <option value="product">Nexora Product (category: product)</option>
+                    <option value="product">GROVIX Product (category: product)</option>
                     <option value="architecture">Engineering Architecture</option>
                   </select>
                 </div>
@@ -494,7 +494,7 @@ export function WorkPublisher({ projects }: WorkPublisherProps) {
                     className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#d8d0c8] text-sm text-[#3a302a]"
                   >
                     <option value="web">Client Website (category: web)</option>
-                    <option value="product">Nexora Product (category: product)</option>
+                    <option value="product">GROVIX Product (category: product)</option>
                     <option value="architecture">Engineering Architecture</option>
                   </select>
                 </div>

@@ -25,7 +25,7 @@ export default async function AdminWorkCMSPage() {
             Work Showcase <span className="italic text-[#c2652a]">Publishing</span>
           </h1>
           <p className="text-xs sm:text-sm text-[#605850]">
-            Manage, edit, and toggle live publishing of engineering case studies on the public Nexora /work page.
+            Manage, edit, and toggle live publishing of engineering case studies on the public GROVIX /work page.
           </p>
         </div>
       </div>

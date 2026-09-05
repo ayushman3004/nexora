@@ -115,7 +115,7 @@ export default function AboutPage() {
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
           <Image
             src="/images/hero-about.jpg"
-            alt="Nexora Studio Courtyard"
+            alt="GROVIX Studio Courtyard"
             fill
             priority
             className="object-cover object-center brightness-100 contrast-105"
@@ -128,7 +128,7 @@ export default function AboutPage() {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto space-y-6">
             <SectionBadge icon={Users} variant="primary">
-              ABOUT NEXORA &bull; OUR ETHOS
+              ABOUT GROVIX &bull; OUR ETHOS
             </SectionBadge>
 
             <h1 className="text-5xl sm:text-6xl md:text-7xl font-serif text-[#3a302a] tracking-tight leading-[1.02] drop-shadow-sm">
@@ -163,7 +163,7 @@ export default function AboutPage() {
                 <span className="italic text-[#c2652a]">it is the presence of intention.</span>
               </h3>
               <p className="text-sm text-[#605850] leading-relaxed">
-                In an era overwhelmed by bloat, brittle code, and generic designs, Nexora operates with deliberate restraint. We strip away superficial noise to uncover robust, enduring software that stands the test of scale.
+                In an era overwhelmed by bloat, brittle code, and generic designs, GROVIX operates with deliberate restraint. We strip away superficial noise to uncover robust, enduring software that stands the test of scale.
               </p>
             </div>
 
@@ -271,7 +271,7 @@ export default function AboutPage() {
       </section>
 
       {/* ============================================================ */}
-      {/* 3. THE MINDS BEHIND NEXORA (TEAM CARDS) */}
+      {/* 3. THE MINDS BEHIND GROVIX (TEAM CARDS) */}
       {/* ============================================================ */}
       <section id="team" className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="text-center max-w-2xl mx-auto space-y-3 mb-16">
@@ -279,7 +279,7 @@ export default function AboutPage() {
             LEADERSHIP & CRAFT
           </SectionBadge>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-[#3a302a]">
-            The Minds Behind <span className="italic text-[#c2652a]">Nexora.</span>
+            The Minds Behind <span className="italic text-[#c2652a]">GROVIX.</span>
           </h2>
           <p className="text-sm sm:text-base text-[#605850]">
             Direct access to veteran leaders who write code, design systems, and execute strategy daily.

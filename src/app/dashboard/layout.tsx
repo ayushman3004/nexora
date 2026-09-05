@@ -4,7 +4,7 @@ import { DashboardHeader } from "@/components/client/DashboardHeader";
 import type { Profile } from "@/types/database";
 
 export const metadata = {
-  title: "Client Portal — Nexora Studio",
+  title: "Client Portal — GROVIX Studio",
   robots: {
     index: false,
     follow: false,

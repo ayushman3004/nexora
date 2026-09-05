@@ -22,7 +22,7 @@ export function AdminHeader({ profile }: AdminHeaderProps) {
           <Link href="/admin">
             <Image
               src="/logo.png"
-              alt="Nexora Logo"
+              alt="GROVIX Logo"
               width={120}
               height={30}
               className="h-7 w-auto object-contain"

@@ -47,7 +47,7 @@ export function DashboardHeader({ profile }: DashboardHeaderProps) {
           <Link href="/dashboard" className="group flex items-center gap-2">
             <Image
               src="/logo.png"
-              alt="Nexora Logo"
+              alt="GROVIX Logo"
               width={140}
               height={36}
               className="h-8 w-auto object-contain transition-transform group-hover:scale-105 duration-200"

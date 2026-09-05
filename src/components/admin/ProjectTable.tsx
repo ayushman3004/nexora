@@ -251,7 +251,7 @@ export function ProjectTable({ projects, clients }: ProjectTableProps) {
                     className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#d8d0c8] text-sm text-[#3a302a]"
                   >
                     <option value="web">Client Website</option>
-                    <option value="product">Nexora Product</option>
+                    <option value="product">GROVIX Product</option>
                     <option value="architecture">Engineering Architecture</option>
                   </select>
                 </div>

@@ -67,7 +67,7 @@ export async function POST(request: Request) {
 
     // 2. Prepare FormSubmit Email Payload
     const payload = {
-      _subject: `[Nexora Inquiry] New Lead: ${name || "Client"} (${company || "Individual"})`,
+      _subject: `[GROVIX Inquiry] New Lead: ${name || "Client"} (${company || "Individual"})`,
       _replyto: email,
       "Client Name": name || "Not provided",
       "Client Email": email || "Not provided",
@@ -87,9 +87,9 @@ export async function POST(request: Request) {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Referer: "https://nexorastudio.com",
-        Origin: "https://nexorastudio.com",
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) NexoraStudio/1.0",
+        Referer: "https://grovixstudio.com",
+        Origin: "https://grovixstudio.com",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) GrovixStudio/1.0",
       },
       body: JSON.stringify(payload),
     });

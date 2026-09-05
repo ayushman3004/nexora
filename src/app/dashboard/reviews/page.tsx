@@ -65,7 +65,7 @@ export default async function ClientReviewsPage() {
             Product <span className="italic text-[#c2652a]">Reviews & Feedback</span>
           </h1>
           <p className="text-xs sm:text-sm text-[#605850] font-sans">
-            Submit ratings and testimonials for Nexora software products you have utilized.
+            Submit ratings and testimonials for GROVIX software products you have utilized.
           </p>
         </div>
 
@@ -121,7 +121,7 @@ export default async function ClientReviewsPage() {
                           />
                         ))}
                         <span className="text-xs font-semibold text-[#3a302a] ml-1.5">
-                          {rev.products?.name || "Nexora Product"}
+                          {rev.products?.name || "GROVIX Product"}
                         </span>
                       </div>
 

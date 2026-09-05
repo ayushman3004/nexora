@@ -62,7 +62,7 @@ export function Navbar() {
           <Link href="/" className="group flex items-center gap-2">
             <Image
               src="/logo.png"
-              alt="Nexora Logo"
+              alt="GROVIX Logo"
               width={160}
               height={40}
               className="h-8 sm:h-9 w-auto object-contain transition-transform group-hover:scale-105 duration-200"
@@ -156,7 +156,7 @@ export function Navbar() {
                 <div className="flex items-center justify-between pb-6 border-b border-[#d8d0c8]/60">
                   <Image
                     src="/logo.png"
-                    alt="Nexora Logo"
+                    alt="GROVIX Logo"
                     width={140}
                     height={36}
                     className="h-8 w-auto object-contain"

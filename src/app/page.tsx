@@ -103,7 +103,7 @@ export default function HomePage() {
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
           <Image
             src="/images/hero-home.jpg"
-            alt="Nexora Studio Atmosphere"
+            alt="GROVIX Studio Atmosphere"
             fill
             priority
             className="object-cover object-center brightness-100 contrast-105"
@@ -144,7 +144,7 @@ export default function HomePage() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-lg sm:text-xl text-[#605850] max-w-2xl mx-auto font-sans leading-relaxed"
           >
-            Nexora turns ideas into digital products and helps businesses grow them. From websites and custom software to SaaS, AI, SEO, and digital growth.
+            GROVIX turns ideas into digital products and helps businesses grow them. From websites and custom software to SaaS, AI, SEO, and digital growth.
           </motion.p>
 
           {/* Action CTAs */}
@@ -189,7 +189,7 @@ export default function HomePage() {
                   <div className="w-3 h-3 rounded-full bg-[#d8d0c8]" />
                 </div>
                 <span className="text-xs font-mono text-[#f0a878] tracking-wide">
-                  NEXORA_STUDIO_KERNEL // v4.18.0
+                  GROVIX_STUDIO_KERNEL // v4.18.0
                 </span>
               </div>
               <div className="flex items-center gap-4 text-xs font-mono text-white/60">
@@ -225,7 +225,7 @@ export default function HomePage() {
                 </div>
                 <div className="text-[#d8d0c8]/60">&#47;&#47; Automated Next.js &amp; Go microservice mesh</div>
                 <div><span className="text-[#f0a878]">export const</span> runtime = <span className="text-[#c2652a]">&quot;edge&quot;</span>;</div>
-                <div><span className="text-[#f0a878]">const</span> engine = <span className="text-blue-300">new</span> NexoraMesh(&#123;</div>
+                <div><span className="text-[#f0a878]">const</span> engine = <span className="text-blue-300">new</span> GrovixMesh(&#123;</div>
                 <div className="pl-4">caching: <span className="text-[#c2652a]">&quot;sub-millisecond-redis&quot;</span>,</div>
                 <div className="pl-4">analytics: <span className="text-emerald-400">true</span>,</div>
                 <div className="pl-4">slaTarget: <span className="text-[#f0a878]">&quot;99.999%&quot;</span></div>
@@ -435,7 +435,7 @@ export default function HomePage() {
                 <span className="font-serif italic text-sm text-[#f0a878]">
                   &ldquo;Engineering Excellence.&rdquo;
                 </span>
-                <span className="font-mono text-[11px]">NEXORA ARCHITECTURE REPO</span>
+                <span className="font-mono text-[11px]">GROVIX ARCHITECTURE REPO</span>
               </div>
             </div>
           </div>
@@ -458,11 +458,11 @@ export default function HomePage() {
                 <span className="italic text-[#c2652a]">Your embedded force multiplier.</span>
               </h2>
               <p className="text-sm sm:text-base text-[#605850] leading-relaxed">
-                Traditional agencies disappear after delivery. Nexora embeds directly with leadership and product teams, aligning incentives around business outcomes, engineering resilience, and compounded growth.
+                Traditional agencies disappear after delivery. GROVIX embeds directly with leadership and product teams, aligning incentives around business outcomes, engineering resilience, and compounded growth.
               </p>
               <div className="p-5 rounded-2xl bg-[#faf5ee] border border-[#d8d0c8]/80 shadow-warm-sm space-y-2">
                 <div className="text-xs font-bold text-[#c2652a] uppercase tracking-wider">
-                  The Nexora Guarantee
+                  The GROVIX Guarantee
                 </div>
                 <p className="text-xs sm:text-sm text-[#3a302a] leading-relaxed">
                   Every product shipped includes comprehensive design tokens, automated CI/CD pipelines, complete documentation, and internal team handover training.
@@ -510,21 +510,21 @@ export default function HomePage() {
           {[
             {
               quote:
-                "Nexora re-engineered our high-frequency trading interface in 6 weeks. The performance boost transformed our platform's user retention.",
+                "GROVIX re-engineered our high-frequency trading interface in 6 weeks. The performance boost transformed our platform's user retention.",
               author: "Marcus Thorne",
               role: "CTO, Aurora Capital",
               firm: "Fintech Platform",
             },
             {
               quote:
-                "Their approach to warm minimalism is refreshing. In an industry full of generic templates, Nexora created a brand and product we are genuinely proud of.",
+                "Their approach to warm minimalism is refreshing. In an industry full of generic templates, GROVIX created a brand and product we are genuinely proud of.",
               author: "Claire Sterling",
               role: "VP of Product",
               firm: "Enterprise SaaS",
             },
             {
               quote:
-                "ServeQ alone automated 40% of our tier-1 engineering triage within two weeks. Nexora builds tools that actually solve operational friction.",
+                "ServeQ alone automated 40% of our tier-1 engineering triage within two weeks. GROVIX builds tools that actually solve operational friction.",
               author: "Devon Bradley",
               role: "Head of Operations",
               firm: "Logistics Mesh",

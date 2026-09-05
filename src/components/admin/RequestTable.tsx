@@ -379,7 +379,7 @@ export function RequestTable({ requests, clients }: RequestTableProps) {
                   className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#d8d0c8] text-sm text-[#3a302a]"
                 >
                   <option value="web">Client Website / Web Application</option>
-                  <option value="product">Nexora Product / SaaS</option>
+                  <option value="product">GROVIX Product / SaaS</option>
                   <option value="architecture">Cloud & Infrastructure</option>
                 </select>
               </div>

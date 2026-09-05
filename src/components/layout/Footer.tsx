@@ -29,7 +29,7 @@ export function Footer() {
               <Link href="/" className="inline-flex items-center gap-2">
                 <Image
                   src="/logo.png"
-                  alt="Nexora Logo"
+                  alt="GROVIX Logo"
                   width={160}
                   height={44}
                   className="h-10 w-auto object-contain"
@@ -163,7 +163,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#8c827a]">
           <div className="flex items-center gap-2">
-            <span>&copy; 2026 Nexora Studio. Crafted for growth.</span>
+            <span>&copy; 2026 GROVIX Studio. Crafted for growth.</span>
           </div>
 
           <div className="flex items-center gap-6">

@@ -20,11 +20,12 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Nexora — Digital Agency & Product Studio | Warm Minimalism",
+  title: "GROVIX — Digital Agency & Product Studio | Warm Minimalism",
   description:
-    "Nexora is a modern digital agency and product studio combining engineering excellence, data-driven digital growth, and internal SaaS tools under the Sahara warm minimalism aesthetic.",
+    "GROVIX is a modern digital agency and product studio combining engineering excellence, data-driven digital growth, and internal SaaS tools under the Sahara warm minimalism aesthetic.",
   keywords: [
-    "Nexora",
+    "GROVIX",
+    "Grovix",
     "Product Studio",
     "Digital Agency",
     "Software Engineering",
@@ -32,9 +33,9 @@ export const metadata: Metadata = {
     "ServeQ",
     "Minimalism",
   ],
-  authors: [{ name: "Nexora Studio" }],
+  authors: [{ name: "GROVIX Studio" }],
   openGraph: {
-    title: "Nexora — Digital Agency & Product Studio",
+    title: "GROVIX — Digital Agency & Product Studio",
     description:
       "Crafting high-performance digital products, resilient engineering architectures, and scalable growth engines.",
     type: "website",

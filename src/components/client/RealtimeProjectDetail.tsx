@@ -195,7 +195,7 @@ export function RealtimeProjectDetail({
                   Publishing Status
                 </span>
                 <p className="text-sm font-semibold text-[#3a302a] mt-0.5">
-                  {project.published ? "Showcased on Nexora /work" : "Private Client Workspace"}
+                  {project.published ? "Showcased on GROVIX /work" : "Private Client Workspace"}
                 </p>
               </div>
             </div>

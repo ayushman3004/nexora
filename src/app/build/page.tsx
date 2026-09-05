@@ -324,7 +324,7 @@ export default function BuildPage() {
               </h2>
 
               <p className="text-sm sm:text-base text-[#605850] leading-relaxed">
-                A high-volume fintech platform processing $12B+ in transactions replaced their bottlenecked monolith with a Nexora-engineered distributed event mesh.
+                A high-volume fintech platform processing $12B+ in transactions replaced their bottlenecked monolith with a GROVIX-engineered distributed event mesh.
               </p>
 
               {/* Stat Highlights */}

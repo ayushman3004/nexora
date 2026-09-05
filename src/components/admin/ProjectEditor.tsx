@@ -204,7 +204,7 @@ export function ProjectEditor({
                   className="w-full px-4 py-2.5 rounded-xl bg-[#faf5ee]/60 border border-[#d8d0c8] text-sm text-[#3a302a]"
                 >
                   <option value="web">Client Website / Web App</option>
-                  <option value="product">Nexora SaaS Product</option>
+                  <option value="product">GROVIX SaaS Product</option>
                   <option value="architecture">Engineering Architecture</option>
                 </select>
               </div>

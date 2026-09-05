@@ -37,13 +37,13 @@ export default function RegisterPage() {
           <Link href="/" className="inline-flex items-center gap-2 mb-2 group">
             <Image
               src="/logo.png"
-              alt="Nexora Logo"
+              alt="GROVIX Logo"
               width={34}
               height={34}
               className="object-contain transition-transform duration-300 group-hover:scale-105"
             />
             <span className="font-serif text-2xl tracking-tight text-[#3a302a] font-medium">
-              NEXORA
+              GROVIX
             </span>
           </Link>
 

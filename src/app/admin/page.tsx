@@ -84,7 +84,7 @@ export default async function AdminDashboardOverviewPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#d8d0c8]/60">
         <div className="space-y-1">
           <SectionBadge icon={Sparkles} variant="primary">
-            NEXORA MISSION CONTROL
+            GROVIX MISSION CONTROL
           </SectionBadge>
           <h1 className="text-3xl sm:text-4xl font-serif text-[#3a302a]">
             Studio <span className="italic text-[#c2652a]">Overview</span>

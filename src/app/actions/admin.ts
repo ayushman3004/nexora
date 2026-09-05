@@ -103,7 +103,7 @@ export async function createProjectFromRequestAction(formData: FormData) {
   await adminClient.from("project_updates").insert({
     project_id: project.id,
     status: "Project Accepted",
-    message: "Project officially initiated by the Nexora engineering studio.",
+    message: "Project officially initiated by the GROVIX engineering studio.",
     created_by: user.id,
   });
 
@@ -182,7 +182,7 @@ export async function createProjectAction(formData: FormData) {
     project_id: project.id,
     status: status === "DELIVERED" ? "Delivered & Published" : "Created",
     message: clientId
-      ? "Project record initialized in Nexora management system."
+      ? "Project record initialized in GROVIX management system."
       : "Studio internal project / showcase created by administrator.",
     created_by: user.id,
   });

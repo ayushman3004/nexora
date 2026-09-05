@@ -87,7 +87,7 @@ export default function ProductsPage() {
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
           <Image
             src="/images/hero-products.jpg"
-            alt="Nexora Products Studio"
+            alt="GROVIX Products Studio"
             fill
             priority
             className="object-cover object-center brightness-100 contrast-105"
@@ -100,7 +100,7 @@ export default function ProductsPage() {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto space-y-6">
             <SectionBadge icon={Layers} variant="primary">
-              BUILT BY NEXORA
+              BUILT BY GROVIX
             </SectionBadge>
 
             <h1 className="text-5xl sm:text-6xl md:text-7xl font-serif text-[#3a302a] tracking-tight leading-[1.02] drop-shadow-sm">
@@ -146,7 +146,7 @@ export default function ProductsPage() {
               <div className="lg:col-span-5 space-y-6">
                 <div className="flex items-center gap-2">
                   <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#fbe8d8] text-[#c2652a] border border-[#f0a878]/30">
-                    NEXORA PRODUCT 01
+                    GROVIX PRODUCT 01
                   </span>
                   <span className="text-xs text-[#8c827a] font-mono">Live</span>
                 </div>
@@ -296,7 +296,7 @@ export default function ProductsPage() {
             INNOVATION LAB
           </SectionBadge>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-[#3a302a]">
-            The Nexora <span className="italic text-[#c2652a]">Pipeline.</span>
+            The GROVIX <span className="italic text-[#c2652a]">Pipeline.</span>
           </h2>
           <p className="text-sm sm:text-base text-[#605850]">
             A snapshot of our proprietary venture software currently being tested and incubated in-house.
@@ -416,13 +416,13 @@ export default function ProductsPage() {
             <div className="space-y-2 max-w-md">
               <div className="flex items-center gap-2 text-xs font-mono text-[#f0a878]">
                 <Compass className="w-4 h-4 text-[#f0a878]" />
-                <span>NEXORA PRODUCTS</span>
+                <span>GROVIX PRODUCTS</span>
               </div>
               <h3 className="text-2xl sm:text-3xl font-serif text-[#faf5ee]">
                 More <span className="italic text-[#f0a878]">coming soon.</span>
               </h3>
               <p className="text-xs sm:text-sm text-white/70 leading-relaxed">
-                We&apos;re always working on new tools and products. Stay tuned for what&apos;s next from the Nexora product lab.
+                We&apos;re always working on new tools and products. Stay tuned for what&apos;s next from the GROVIX product lab.
               </p>
             </div>
 
@@ -451,7 +451,7 @@ export default function ProductsPage() {
                 What our users <span className="italic text-[#c2652a]">experience.</span>
               </h2>
               <p className="text-sm sm:text-base text-[#605850]">
-                Live feedback from engineering leaders, product operators, and clients deploying Nexora tools.
+                Live feedback from engineering leaders, product operators, and clients deploying GROVIX tools.
               </p>
             </div>
 
@@ -500,7 +500,7 @@ export default function ProductsPage() {
       <section className="py-20 md:py-28 bg-[#3a302a] text-[#faf5ee] text-center">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
           <SectionBadge icon={Sparkles} variant="neutral">
-            BUILT BY NEXORA
+            BUILT BY GROVIX
           </SectionBadge>
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-serif">
             Want something <span className="italic text-[#f0a878]">built for you?</span>

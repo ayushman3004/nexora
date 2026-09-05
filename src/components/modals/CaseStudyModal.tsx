@@ -23,7 +23,7 @@ export function CaseStudyModal() {
             Enterprise Data Pipeline <span className="italic text-[#c2652a]">Refactor.</span>
           </h2>
           <p className="text-xs md:text-sm text-[#605850] mt-1 max-w-xl">
-            How Nexora re-architected a legacy monolithic transaction engine into an event-driven microservices architecture with a 400% throughput gain.
+            How GROVIX re-architected a legacy monolithic transaction engine into an event-driven microservices architecture with a 400% throughput gain.
           </p>
         </div>
         <button
@@ -88,9 +88,9 @@ export function CaseStudyModal() {
             </div>
 
             <div className="space-y-3">
-              <h4 className="text-base font-semibold text-[#3a302a]">Nexora&apos;s Solution</h4>
+              <h4 className="text-base font-semibold text-[#3a302a]">GROVIX&apos;s Solution</h4>
               <p className="text-sm text-[#605850] leading-relaxed">
-                Nexora designed and engineered a modular Rust & Go stream processing pipeline orchestrated on AWS EKS with Kafka clusters, automated failover queues, and sub-millisecond in-memory caching layers with Redis Enterprise.
+                GROVIX designed and engineered a modular Rust & Go stream processing pipeline orchestrated on AWS EKS with Kafka clusters, automated failover queues, and sub-millisecond in-memory caching layers with Redis Enterprise.
               </p>
             </div>
 
@@ -189,7 +189,7 @@ export function CaseStudyModal() {
 
             <div className="p-4 rounded-xl bg-[#f2ece4] border border-[#d8d0c8]/60">
               <blockquote className="text-sm font-serif italic text-[#3a302a] leading-relaxed">
-                &ldquo;Nexora didn&apos;t just optimize our pipeline; they engineered a foundation that allowed us to scale from Series B to Series C without a single architecture rewrite.&rdquo;
+                &ldquo;GROVIX didn&apos;t just optimize our pipeline; they engineered a foundation that allowed us to scale from Series B to Series C without a single architecture rewrite.&rdquo;
               </blockquote>
               <div className="text-xs text-[#8c827a] mt-2 font-sans font-medium">
                 — VP of Infrastructure, Tier-1 Global Fintech

@@ -6,7 +6,7 @@ export async function POST(request: Request) {
     const { name, email, company, teamSize, selectedSlot, selectedTier } = body;
 
     const payload = {
-      _subject: `[Nexora Demo] ServeQ Walkthrough Request: ${name || "Lead"} (${company || "Company"})`,
+      _subject: `[GROVIX Demo] ServeQ Walkthrough Request: ${name || "Lead"} (${company || "Company"})`,
       _replyto: email,
       "Lead Name": name || "Not provided",
       "Lead Email": email || "Not provided",
@@ -23,9 +23,9 @@ export async function POST(request: Request) {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Referer: "https://nexorastudio.com",
-        Origin: "https://nexorastudio.com",
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) NexoraStudio/1.0",
+        Referer: "https://grovixstudio.com",
+        Origin: "https://grovixstudio.com",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) GrovixStudio/1.0",
       },
       body: JSON.stringify(payload),
     });

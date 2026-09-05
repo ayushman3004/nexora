@@ -38,13 +38,13 @@ export default function EmailVerifiedPage() {
           <Link href="/" className="inline-flex items-center gap-2 mb-2 group">
             <Image
               src="/logo.png"
-              alt="Nexora Logo"
+              alt="GROVIX Logo"
               width={34}
               height={34}
               className="object-contain transition-transform duration-300 group-hover:scale-105"
             />
             <span className="font-serif text-2xl tracking-tight text-[#3a302a] font-medium">
-              NEXORA
+              GROVIX
             </span>
           </Link>
         </div>
@@ -76,7 +76,7 @@ export default function EmailVerifiedPage() {
               Email Verified <span className="italic text-[#c2652a]">Successfully.</span>
             </h1>
             <p className="text-sm text-[#605850] font-sans leading-relaxed max-w-xs mx-auto pt-1">
-              Your Nexora Client Portal account is authenticated and confirmed. You now have full access to your projects and milestones.
+              Your GROVIX Client Portal account is authenticated and confirmed. You now have full access to your projects and milestones.
             </p>
           </div>
 
@@ -119,7 +119,7 @@ export default function EmailVerifiedPage() {
             href="/"
             className="text-xs text-[#605850] hover:text-[#3a302a] font-medium transition-colors"
           >
-            ← Return to Nexora homepage
+            ← Return to GROVIX homepage
           </Link>
         </div>
       </div>

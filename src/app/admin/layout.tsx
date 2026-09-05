@@ -6,7 +6,7 @@ import { AdminHeader } from "@/components/admin/AdminHeader";
 import type { Profile } from "@/types/database";
 
 export const metadata = {
-  title: "Admin Studio Console — Nexora",
+  title: "Admin Studio Console — GROVIX",
   robots: {
     index: false,
     follow: false,

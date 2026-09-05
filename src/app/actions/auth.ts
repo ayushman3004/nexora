@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 
 export interface AuthActionResult {
   success?: boolean;
@@ -58,6 +59,12 @@ export async function registerAction(formData: FormData): Promise<AuthActionResu
     return { error: "Password must be at least 6 characters." };
   }
 
+  const headerList = await headers();
+  const host = headerList.get("host") || "localhost:3000";
+  const protocol = host.includes("localhost") ? "http" : "https";
+  const origin = `${protocol}://${host}`;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || origin;
+
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -68,6 +75,7 @@ export async function registerAction(formData: FormData): Promise<AuthActionResu
         company: company || null,
         role: "client",
       },
+      emailRedirectTo: `${siteUrl}/auth/callback?next=/auth/verified`,
     },
   });
 
@@ -82,8 +90,7 @@ export async function registerAction(formData: FormData): Promise<AuthActionResu
 
   return {
     success: true,
-    error: "Account created! Please check your email to verify your account or log in.",
-    redirectTo: "/login",
+    error: "Verification email sent! Please check your inbox and click the verification link to activate your portal account.",
   };
 }
 
@@ -100,9 +107,15 @@ export async function forgotPasswordAction(formData: FormData): Promise<AuthActi
     return { error: "Please enter your email address." };
   }
 
+  const headerList = await headers();
+  const host = headerList.get("host") || "localhost:3000";
+  const protocol = host.includes("localhost") ? "http" : "https";
+  const origin = `${protocol}://${host}`;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || origin;
+
   const supabase = await createClient();
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/auth/callback?next=/dashboard/reset-password`,
+    redirectTo: `${siteUrl}/auth/callback?next=/dashboard/reset-password`,
   });
 
   if (error) {

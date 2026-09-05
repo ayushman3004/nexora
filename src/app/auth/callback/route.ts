@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/dashboard";
+  const next = searchParams.get("next") ?? "/auth/verified";
 
   if (code) {
     const supabase = await createClient();
@@ -14,6 +14,6 @@ export async function GET(request: Request) {
     }
   }
 
-  // Return the user to an error page or login with error
-  return NextResponse.redirect(`${origin}/login?error=Authentication%20failed`);
+  // Return user to login with helpful error
+  return NextResponse.redirect(`${origin}/login?error=Verification%20link%20expired%20or%20invalid`);
 }

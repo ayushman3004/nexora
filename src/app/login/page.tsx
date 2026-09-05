@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { loginAction } from "@/app/actions/auth";
-import { ArrowRight, Lock, Mail, AlertCircle, Sparkles } from "lucide-react";
+import { ArrowRight, Lock, Mail, AlertCircle, Sparkles, CheckCircle2 } from "lucide-react";
 import { SectionBadge } from "@/components/ui/SectionBadge";
 
 function LoginForm() {
@@ -13,6 +13,7 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") || "/dashboard";
   const urlError = searchParams.get("error");
+  const isVerified = searchParams.get("verified") === "true";
 
   const [isPending, startTransition] = useTransition();
   const [errorMessage, setErrorMessage] = useState<string | null>(urlError);
@@ -68,6 +69,20 @@ function LoginForm() {
 
         {/* Card */}
         <div className="bg-white/80 backdrop-blur-md rounded-3xl p-7 sm:p-9 border border-[#d8d0c8]/70 shadow-warm-md">
+          {isVerified && !errorMessage && (
+            <div className="mb-6 p-4 rounded-2xl bg-[#c2652a]/10 border border-[#c2652a]/30 flex items-start gap-3 text-sm text-[#c2652a] shadow-warm-xs">
+              <CheckCircle2 className="w-5 h-5 mt-0.5 shrink-0 text-[#c2652a]" />
+              <div>
+                <span className="font-semibold block text-[#3a302a]">
+                  Email Verified Successfully!
+                </span>
+                <span className="text-xs text-[#605850]">
+                  Your portal account is active and verified. Please sign in with your credentials below.
+                </span>
+              </div>
+            </div>
+          )}
+
           {errorMessage && (
             <div className="mb-6 p-4 rounded-xl bg-[#8c3c3c]/10 border border-[#8c3c3c]/20 flex items-start gap-3 text-sm text-[#8c3c3c]">
               <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />

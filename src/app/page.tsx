@@ -115,18 +115,6 @@ export default function HomePage() {
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto space-y-8">
-            {/* Studio Tag */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="flex justify-center"
-            >
-            <SectionBadge icon={Sparkles} variant="primary">
-              Digital Product &amp; Growth Studio
-            </SectionBadge>
-          </motion.div>
-
           {/* Main Headline */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -556,11 +544,6 @@ export default function HomePage() {
       {/* ============================================================ */}
       <section className="py-16 md:py-24 bg-[#3a302a] text-[#faf5ee] relative overflow-hidden">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8 relative z-10">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-white/10 text-[#f0a878] border border-white/15">
-            <Sparkles className="w-3.5 h-3.5" />
-            READY TO COMMENCE
-          </div>
-
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-serif leading-tight">
             Have a project in mind? <br />
             Let&apos;s build your <span className="italic text-[#f0a878]">competitive edge.</span>

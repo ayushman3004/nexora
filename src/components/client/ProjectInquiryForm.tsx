@@ -109,7 +109,7 @@ export function ProjectInquiryForm({ userProfile, onSuccess }: ProjectInquiryFor
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await fetch("/api/inquiry", {
+      const res = await fetch("/api/inquiry", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -123,12 +123,18 @@ export function ProjectInquiryForm({ userProfile, onSuccess }: ProjectInquiryFor
           timeline,
         }),
       });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || "Submission failed");
+      }
+
       if (onSuccess) onSuccess();
+      setIsSuccess(true);
     } catch (err) {
       console.error("Failed to submit inquiry:", err);
     } finally {
       setIsSubmitting(false);
-      setIsSuccess(true);
     }
   };
 

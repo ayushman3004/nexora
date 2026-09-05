@@ -11,7 +11,13 @@ export function Footer() {
   const pathname = usePathname();
   const { openModal } = useModal();
 
-  if (pathname.startsWith("/admin") || pathname.startsWith("/dashboard")) {
+  if (
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/dashboard") ||
+    pathname === "/login" ||
+    pathname === "/register" ||
+    pathname.startsWith("/auth")
+  ) {
     return null;
   }
 
@@ -23,10 +29,10 @@ export function Footer() {
       {/* Main Footer Container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 pb-16 border-b border-[#d8d0c8]/60">
-          {/* Brand Manifesto Column */}
+          {/* Brand & Studio Brief */}
           <div className="lg:col-span-5 space-y-6">
             <div className="space-y-3">
-              <Link href="/" className="inline-flex items-center gap-2">
+              <Link href="/" className="inline-block">
                 <Image
                   src="/logo.png"
                   alt="GROVIX Logo"
@@ -41,13 +47,13 @@ export function Footer() {
             </div>
 
             <div>
-              <button
-                onClick={() => openModal("inquiry")}
+              <Link
+                href="/start-project"
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white text-xs sm:text-sm font-semibold shadow-warm-sm hover:shadow-warm-md transition-all duration-200"
               >
                 <span>Initiate Studio Partnership</span>
                 <ArrowUpRight className="w-4 h-4" />
-              </button>
+              </Link>
             </div>
           </div>
 

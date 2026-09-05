@@ -154,13 +154,13 @@ export default function HomePage() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2"
           >
-            <button
-              onClick={() => openModal("inquiry")}
+            <Link
+              href="/start-project"
               className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white font-semibold text-sm sm:text-base shadow-warm-md hover:shadow-warm-lg transition-all duration-200 flex items-center justify-center gap-2 group"
             >
               <span>Start a Project</span>
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </button>
+            </Link>
 
             <Link
               href="/work"
@@ -367,13 +367,13 @@ export default function HomePage() {
             </div>
 
             <div className="pt-4">
-              <button
-                onClick={() => openModal("inquiry")}
-                className="px-6 py-3 rounded-full bg-[#3a302a] hover:bg-[#2e2621] text-white text-sm font-semibold shadow-warm-sm transition-all flex items-center gap-2"
+              <Link
+                href="/start-project"
+                className="inline-flex px-6 py-3 rounded-full bg-[#3a302a] hover:bg-[#2e2621] text-white text-sm font-semibold shadow-warm-sm transition-all items-center gap-2"
               >
                 <span>Discuss Your System Architecture</span>
                 <ArrowRight className="w-4 h-4" />
-              </button>
+              </Link>
             </div>
           </div>
 
@@ -571,13 +571,13 @@ export default function HomePage() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-            <button
-              onClick={() => openModal("inquiry")}
+            <Link
+              href="/start-project"
               className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white font-semibold text-sm sm:text-base shadow-warm-md hover:shadow-warm-lg transition-all flex items-center justify-center gap-2"
             >
               <span>Initiate Project Inquiry</span>
               <ArrowRight className="w-4 h-4" />
-            </button>
+            </Link>
             <Link
               href="/products"
               className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-white/10 hover:bg-white/15 text-white font-semibold text-sm sm:text-base border border-white/20 transition-all flex items-center justify-center gap-2"

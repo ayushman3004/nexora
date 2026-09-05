@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import {
@@ -153,13 +154,13 @@ export default function BuildPage() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-            <button
-              onClick={() => openModal("inquiry")}
+            <Link
+              href="/start-project"
               className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white font-semibold text-sm sm:text-base shadow-warm-md hover:shadow-warm-lg transition-all flex items-center justify-center gap-2"
             >
               <span>Start Building</span>
               <ArrowRight className="w-4 h-4" />
-            </button>
+            </Link>
 
             <button
               onClick={() => openModal("case-study")}
@@ -464,13 +465,13 @@ export default function BuildPage() {
             Tell us about your technical challenges, architecture requirements, or project deadlines. We&apos;ll schedule an architecture consultation.
           </p>
           <div className="pt-2">
-            <button
-              onClick={() => openModal("inquiry")}
-              className="px-8 py-3.5 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white font-semibold text-sm sm:text-base shadow-warm-md hover:shadow-warm-lg transition-all flex items-center justify-center gap-2 mx-auto"
+            <Link
+              href="/start-project"
+              className="px-8 py-3.5 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white font-semibold text-sm sm:text-base shadow-warm-md hover:shadow-warm-lg transition-all inline-flex items-center justify-center gap-2 mx-auto"
             >
               <span>Start a Project</span>
               <ArrowRight className="w-4 h-4" />
-            </button>
+            </Link>
           </div>
         </div>
       </section>

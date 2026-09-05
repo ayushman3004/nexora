@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import {
@@ -509,13 +510,13 @@ export default function ProductsPage() {
             If you like what we build for ourselves, imagine what we can build for your business. Let&apos;s talk about your project.
           </p>
           <div className="pt-2">
-            <button
-              onClick={() => openModal("inquiry")}
-              className="px-8 py-3.5 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white font-semibold text-sm sm:text-base shadow-warm-md hover:shadow-warm-lg transition-all flex items-center justify-center gap-2 mx-auto"
+            <Link
+              href="/start-project"
+              className="px-8 py-3.5 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white font-semibold text-sm sm:text-base shadow-warm-md hover:shadow-warm-lg transition-all inline-flex items-center justify-center gap-2 mx-auto"
             >
               <span>Start a Project</span>
               <ArrowRight className="w-4 h-4" />
-            </button>
+            </Link>
           </div>
         </div>
       </section>

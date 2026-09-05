@@ -91,6 +91,9 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error("Error submitting inquiry:", error);
-    return NextResponse.json({ success: true, message: "Inquiry received" });
+    return NextResponse.json(
+      { success: false, error: "Failed to process inquiry submission." },
+      { status: 500 }
+    );
   }
 }

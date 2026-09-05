@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import {
@@ -141,13 +142,13 @@ export default function AboutPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-              <button
-                onClick={() => openModal("inquiry")}
+              <Link
+                href="/start-project"
                 className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white font-semibold text-sm sm:text-base shadow-warm-md hover:shadow-warm-lg transition-all flex items-center justify-center gap-2"
               >
                 <span>Meet the Studio</span>
                 <ArrowRight className="w-4 h-4" />
-              </button>
+              </Link>
             </div>
           </div>
 
@@ -400,13 +401,13 @@ export default function AboutPage() {
             Reach out to Elena, Julian, or Aria directly to discuss initiating a new product build, architecture audit, or growth sprint.
           </p>
           <div className="pt-2">
-            <button
-              onClick={() => openModal("inquiry")}
-              className="px-8 py-3.5 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white font-semibold text-sm sm:text-base shadow-warm-md hover:shadow-warm-lg transition-all flex items-center justify-center gap-2 mx-auto"
+            <Link
+              href="/start-project"
+              className="px-8 py-3.5 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white font-semibold text-sm sm:text-base shadow-warm-md hover:shadow-warm-lg transition-all inline-flex items-center justify-center gap-2 mx-auto"
             >
               <span>Schedule Intro Call</span>
               <ArrowRight className="w-4 h-4" />
-            </button>
+            </Link>
           </div>
         </div>
       </section>

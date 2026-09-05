@@ -37,7 +37,13 @@ export function Navbar() {
     { name: "About", href: "/about" },
   ];
 
-  if (pathname.startsWith("/admin") || pathname.startsWith("/dashboard")) {
+  if (
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/dashboard") ||
+    pathname === "/login" ||
+    pathname === "/register" ||
+    pathname.startsWith("/auth")
+  ) {
     return null;
   }
 
@@ -105,23 +111,23 @@ export function Navbar() {
             >
               Client Portal
             </Link>
-            <button
-              onClick={() => openModal("inquiry")}
+            <Link
+              href="/start-project"
               className="group relative inline-flex items-center gap-1.5 px-5 py-2 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white text-xs lg:text-sm font-semibold shadow-warm-sm hover:shadow-warm-md transition-all duration-200"
             >
               <span>Get Started</span>
               <ArrowUpRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </button>
+            </Link>
           </div>
 
           {/* Mobile Hamburger Button */}
           <div className="flex md:hidden items-center gap-2">
-            <button
-              onClick={() => openModal("inquiry")}
+            <Link
+              href="/start-project"
               className="px-3.5 py-1.5 rounded-full bg-[#c2652a] text-white text-xs font-semibold shadow-warm-sm"
             >
               Inquire
-            </button>
+            </Link>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-xl text-[#3a302a] bg-[#f2ece4] border border-[#d8d0c8]/60 hover:bg-[#ece6dc] transition-colors"
@@ -194,16 +200,14 @@ export function Navbar() {
 
               {/* Mobile CTA */}
               <div className="space-y-4 pt-6 border-t border-[#d8d0c8]/60">
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    openModal("inquiry");
-                  }}
+                <Link
+                  href="/start-project"
+                  onClick={() => setMobileMenuOpen(false)}
                   className="w-full py-3 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white text-sm font-semibold flex items-center justify-center gap-2 shadow-warm-sm"
                 >
                   <Sparkles className="w-4 h-4" />
                   <span>Start a Project</span>
-                </button>
+                </Link>
                 <div className="text-center text-xs text-[#8c827a]">
                   Crafted for high-growth ventures &bull; 2024
                 </div>

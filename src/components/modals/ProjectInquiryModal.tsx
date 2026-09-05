@@ -150,7 +150,7 @@ export function ProjectInquiryModal() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await fetch("/api/inquiry", {
+      const res = await fetch("/api/inquiry", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -164,11 +164,21 @@ export function ProjectInquiryModal() {
           timeline,
         }),
       });
+
+      if (!res.ok) {
+        if (res.status === 401) {
+          setAuthStatus("unauthenticated");
+          return;
+        }
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || "Submission failed");
+      }
+
+      setIsSuccess(true);
     } catch (err) {
       console.error("Failed to submit inquiry:", err);
     } finally {
       setIsSubmitting(false);
-      setIsSuccess(true);
     }
   };
 

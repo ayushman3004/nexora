@@ -617,13 +617,13 @@ export default function WorkPage() {
                           </a>
                         )}
 
-                        <button
-                          onClick={() => openModal("inquiry")}
+                        <Link
+                          href="/start-project"
                           className="inline-flex items-center gap-1 text-xs font-semibold text-[#3a302a] hover:text-[#c2652a] transition-colors"
                         >
                           <span>Build Similar Project</span>
                           <ArrowRight className="w-3.5 h-3.5" />
-                        </button>
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -649,13 +649,13 @@ export default function WorkPage() {
               Projects published by the studio upon delivery will appear here live.
             </p>
             <div className="pt-2">
-              <button
-                onClick={() => openModal("inquiry")}
+              <Link
+                href="/start-project"
                 className="px-6 py-3 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white text-xs sm:text-sm font-semibold shadow-warm-sm transition-all inline-flex items-center gap-2 cursor-pointer"
               >
                 <span>Start a Project</span>
                 <ArrowRight className="w-4 h-4" />
-              </button>
+              </Link>
             </div>
           </div>
         ) : null}
@@ -773,13 +773,13 @@ export default function WorkPage() {
             convert visitors into loyal clients.
           </p>
           <div className="pt-2">
-            <button
-              onClick={() => openModal("inquiry")}
-              className="px-8 py-3.5 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white font-semibold text-sm sm:text-base shadow-warm-md hover:shadow-warm-lg transition-all flex items-center justify-center gap-2 mx-auto"
+            <Link
+              href="/start-project"
+              className="px-8 py-3.5 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white font-semibold text-sm sm:text-base shadow-warm-md hover:shadow-warm-lg transition-all inline-flex items-center justify-center gap-2 mx-auto"
             >
               <span>Start Your Project</span>
               <ArrowRight className="w-4 h-4" />
-            </button>
+            </Link>
           </div>
         </div>
       </section>

@@ -5,6 +5,7 @@ import { ModalProvider } from "@/context/ModalContext";
 import { GlobalModalContainer } from "@/components/modals/GlobalModalContainer";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { CookieConsent } from "@/components/ui/CookieConsent";
 
 const ebGaramond = EB_Garamond({
   variable: "--font-garamond",
@@ -66,6 +67,7 @@ export default function RootLayout({
           <main className="flex-1">{children}</main>
           <Footer />
           <GlobalModalContainer />
+          <CookieConsent />
         </ModalProvider>
       </body>
     </html>

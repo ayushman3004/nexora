@@ -83,6 +83,20 @@ function LoginForm() {
             </div>
           )}
 
+          {(redirectTo.includes("inquiry") || redirectTo.includes("start")) && !errorMessage && !isVerified && (
+            <div className="mb-6 p-4 rounded-2xl bg-[#fbe8d8] border border-[#c2652a]/40 flex items-start gap-3 text-sm text-[#3a302a] shadow-warm-xs">
+              <Sparkles className="w-5 h-5 mt-0.5 shrink-0 text-[#c2652a]" />
+              <div>
+                <span className="font-semibold block text-[#3a302a]">
+                  Sign In Required to Start a Project
+                </span>
+                <span className="text-xs text-[#605850]">
+                  Please sign in or create an account to submit your project brief and track development milestones in the GROVIX client portal.
+                </span>
+              </div>
+            </div>
+          )}
+
           {errorMessage && (
             <div className="mb-6 p-4 rounded-xl bg-[#8c3c3c]/10 border border-[#8c3c3c]/20 flex items-start gap-3 text-sm text-[#8c3c3c]">
               <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
@@ -154,7 +168,7 @@ function LoginForm() {
           <div className="mt-6 pt-6 border-t border-[#d8d0c8]/50 text-center text-xs text-[#605850]">
             Don&apos;t have an account yet?{" "}
             <Link
-              href="/register"
+              href={`/register${redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ""}`}
               className="text-[#c2652a] font-semibold hover:underline"
             >
               Register here

@@ -124,6 +124,8 @@ export async function registerAction(formData: FormData): Promise<AuthActionResu
     }
   }
 
+  const redirectTo = (formData.get("redirectTo") as string) || "/dashboard";
+
   // 3. Automatically log in the user immediately
   const supabase = await createClient();
   const { error: signInError } = await supabase.auth.signInWithPassword({
@@ -132,10 +134,10 @@ export async function registerAction(formData: FormData): Promise<AuthActionResu
   });
 
   if (signInError) {
-    return { success: true, redirectTo: "/login" };
+    return { success: true, redirectTo: `/login${redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ""}` };
   }
 
-  return { success: true, redirectTo: "/dashboard" };
+  return { success: true, redirectTo };
 }
 
 export async function resendVerificationAction(formData: FormData): Promise<AuthActionResult> {

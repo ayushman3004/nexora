@@ -1,15 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
-import { X, Check, ArrowRight, ArrowLeft, Sparkles, Lightbulb, TrendingUp, Cpu, HelpCircle } from "lucide-react";
+import { X, Check, ArrowRight, ArrowLeft, Sparkles, Lightbulb, TrendingUp, Cpu, HelpCircle, Lock, ShieldCheck } from "lucide-react";
 import { useModal } from "@/context/ModalContext";
+import { createClient } from "@/lib/supabase/client";
 
 export function ProjectInquiryModal() {
   const { closeModal } = useModal();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  // Authentication State
+  const [authStatus, setAuthStatus] = useState<"loading" | "authenticated" | "unauthenticated">("loading");
+  const [userProfile, setUserProfile] = useState<{ id: string; name?: string; email?: string; company?: string } | null>(null);
 
   // Form State
   const [service, setService] = useState<string>("build");
@@ -22,6 +28,50 @@ export function ProjectInquiryModal() {
     company: "",
     details: "",
   });
+
+  useEffect(() => {
+    let isMounted = true;
+    async function checkAuth() {
+      try {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          if (isMounted) setAuthStatus("unauthenticated");
+          return;
+        }
+
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", user.id)
+          .maybeSingle();
+
+        if (isMounted) {
+          const profileData = {
+            id: user.id,
+            name: profile?.name || user.user_metadata?.name || "",
+            email: user.email || "",
+            company: profile?.company || user.user_metadata?.company || "",
+          };
+          setUserProfile(profileData);
+          setFormData(prev => ({
+            ...prev,
+            name: profileData.name || prev.name,
+            email: profileData.email || prev.email,
+            company: profileData.company || prev.company,
+          }));
+          setAuthStatus("authenticated");
+        }
+      } catch (err) {
+        console.error("Auth check failed in ProjectInquiryModal:", err);
+        if (isMounted) setAuthStatus("unauthenticated");
+      }
+    }
+    checkAuth();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const services = [
     {
@@ -122,17 +172,106 @@ export function ProjectInquiryModal() {
     }
   };
 
+  if (authStatus === "loading") {
+    return (
+      <div className="relative w-full max-w-lg bg-[#faf5ee] border border-[#d8d0c8]/70 rounded-3xl shadow-warm-lg p-10 flex flex-col items-center justify-center text-center">
+        <div className="w-9 h-9 border-3 border-[#c2652a] border-t-transparent rounded-full animate-spin mb-4" />
+        <h3 className="text-base font-serif text-[#3a302a]">Verifying client session...</h3>
+        <p className="text-xs text-[#8c827a] mt-1">Connecting to GROVIX Client Portal</p>
+      </div>
+    );
+  }
+
+  if (authStatus === "unauthenticated") {
+    return (
+      <div className="relative w-full max-w-lg bg-[#faf5ee] border border-[#d8d0c8]/70 rounded-3xl shadow-warm-lg overflow-hidden flex flex-col">
+        {/* Header */}
+        <div className="p-6 border-b border-[#d8d0c8]/50 flex items-center justify-between bg-[#f6f0e8]/80">
+          <div className="flex items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wide bg-[#fbe8d8] text-[#c2652a]">
+              <Lock className="w-3 h-3" />
+              AUTHENTICATION REQUIRED
+            </span>
+          </div>
+          <button
+            onClick={closeModal}
+            className="p-2 rounded-full text-[#605850] hover:text-[#3a302a] hover:bg-[#ece6dc] transition-colors"
+            aria-label="Close modal"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Locked Body */}
+        <div className="p-8 text-center space-y-6">
+          <div className="w-16 h-16 rounded-3xl bg-[#fbe8d8] text-[#c2652a] flex items-center justify-center mx-auto shadow-warm-sm border border-[#c2652a]/20">
+            <Lock className="w-8 h-8" />
+          </div>
+
+          <div className="space-y-2">
+            <h3 className="text-2xl sm:text-3xl font-serif text-[#3a302a]">
+              Sign in to start your <span className="italic text-[#c2652a]">project.</span>
+            </h3>
+            <p className="text-sm text-[#605850] max-w-sm mx-auto leading-relaxed">
+              This page cannot be accessed until you are logged in. Please sign into your GROVIX Client Portal account or register below to submit a project brief and track development milestones.
+            </p>
+          </div>
+
+          <div className="bg-[#f6f0e8] border border-[#d8d0c8]/60 rounded-2xl p-4 text-xs text-[#605850] text-left space-y-2 max-w-sm mx-auto">
+            <div className="flex items-center gap-2 font-semibold text-[#3a302a]">
+              <Sparkles className="w-3.5 h-3.5 text-[#c2652a]" />
+              <span>Client Portal Membership Includes:</span>
+            </div>
+            <ul className="space-y-1.5 text-[11px] text-[#605850] pl-5 list-disc">
+              <li>Direct engineering roadmap & architecture scoping</li>
+              <li>Milestone changelogs & live staging preview links</li>
+              <li>Transparent budget estimation in Indian Rupees (INR)</li>
+            </ul>
+          </div>
+
+          <div className="space-y-2.5 pt-2 max-w-sm mx-auto">
+            <Link
+              href="/login?redirectTo=/?inquiry=true"
+              onClick={closeModal}
+              className="w-full py-3 px-5 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white font-semibold text-sm shadow-warm-sm hover:shadow-warm-md transition-all flex items-center justify-center gap-2"
+            >
+              <span>Sign In to Continue</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link
+              href="/register?redirectTo=/?inquiry=true"
+              onClick={closeModal}
+              className="w-full py-3 px-5 rounded-full bg-white/80 hover:bg-white text-[#3a302a] font-semibold text-sm border border-[#d8d0c8] shadow-warm-xs transition-all flex items-center justify-center"
+            >
+              Create Client Account
+            </Link>
+          </div>
+
+          <p className="text-[11px] text-[#8c827a]">
+            Free consultation • No upfront commitment required
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative w-full max-w-2xl bg-[#faf5ee] border border-[#d8d0c8]/60 rounded-2xl shadow-warm-lg overflow-hidden flex flex-col max-h-[90vh]">
       {/* Header */}
       <div className="p-6 md:p-8 border-b border-[#d8d0c8]/50 flex items-start justify-between bg-[#f6f0e8]/80">
         <div>
-          <div className="flex items-center gap-2 mb-1.5">
+          <div className="flex items-center gap-2 mb-1.5 flex-wrap">
             <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold tracking-wide bg-[#fbe8d8] text-[#c2652a]">
               <Sparkles className="w-3 h-3" />
               START A PROJECT
             </span>
             <span className="text-xs text-[#8c827a]">Step {step} of 3</span>
+            {userProfile && (
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-mono text-[#605850] bg-[#ece6dc] px-2.5 py-0.5 rounded-full border border-[#d8d0c8]/70">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                <span className="truncate max-w-[150px]">{userProfile.email}</span>
+              </span>
+            )}
           </div>
           <h2 className="text-2xl md:text-3xl font-serif font-normal text-[#3a302a]">
             Tell us about your <span className="italic text-[#c2652a]">project.</span>
@@ -193,12 +332,22 @@ export function ProjectInquiryModal() {
                 <span className="font-medium">{timeline}</span>
               </div>
             </div>
-            <button
-              onClick={closeModal}
-              className="px-6 py-2.5 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white font-medium transition-all shadow-warm-sm hover:shadow-warm-md"
-            >
-              Back to GROVIX
-            </button>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <Link
+                href="/dashboard"
+                onClick={closeModal}
+                className="w-full sm:w-auto px-6 py-2.5 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white font-medium transition-all shadow-warm-sm hover:shadow-warm-md flex items-center justify-center gap-2"
+              >
+                <span>Track in Client Portal</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <button
+                onClick={closeModal}
+                className="w-full sm:w-auto px-6 py-2.5 rounded-full bg-[#ece6dc] hover:bg-[#d8d0c8] text-[#3a302a] font-medium transition-all"
+              >
+                Back to Website
+              </button>
+            </div>
           </motion.div>
         ) : (
           <div>
@@ -367,9 +516,15 @@ export function ProjectInquiryModal() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-[#3a302a] uppercase tracking-wider mb-1.5">
-                      Email *
-                    </label>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="block text-xs font-semibold text-[#3a302a] uppercase tracking-wider">
+                        Email *
+                      </label>
+                      <span className="text-[10px] font-mono text-emerald-600 flex items-center gap-1">
+                        <ShieldCheck className="w-3 h-3" />
+                        Portal Verified
+                      </span>
+                    </div>
                     <input
                       type="email"
                       name="email"

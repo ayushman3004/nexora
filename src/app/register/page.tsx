@@ -1,15 +1,17 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
+import React, { useState, useTransition, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { registerAction } from "@/app/actions/auth";
 import { ArrowRight, Lock, Mail, User, Building, AlertCircle, CheckCircle2, Sparkles } from "lucide-react";
 import { SectionBadge } from "@/components/ui/SectionBadge";
 
-export default function RegisterPage() {
+function RegisterForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirectTo") || "/dashboard";
   const [isPending, startTransition] = useTransition();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -17,6 +19,7 @@ export default function RegisterPage() {
     e.preventDefault();
     setErrorMessage(null);
     const formData = new FormData(e.currentTarget);
+    formData.set("redirectTo", redirectTo);
 
     startTransition(async () => {
       const res = await registerAction(formData);
@@ -166,7 +169,7 @@ export default function RegisterPage() {
           <div className="mt-6 pt-6 border-t border-[#d8d0c8]/50 text-center text-xs text-[#605850]">
             Already have an account?{" "}
             <Link
-              href="/login"
+              href={`/login${redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ""}`}
               className="text-[#c2652a] font-semibold hover:underline"
             >
               Sign in
@@ -185,5 +188,13 @@ export default function RegisterPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={<div className="min-h-[70vh] flex items-center justify-center text-[#605850]">Loading...</div>}>
+      <RegisterForm />
+    </Suspense>
   );
 }

@@ -30,7 +30,7 @@ export function ProjectApplicationsList({ requests }: ProjectApplicationsListPro
         </p>
         <div className="pt-1">
           <Link
-            href="/#contact"
+            href="/start-project"
             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#c2652a] text-white text-xs font-semibold shadow-warm-sm hover:bg-[#a8521e] transition-all"
           >
             <span>Start a Project Brief</span>

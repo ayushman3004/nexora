@@ -64,7 +64,7 @@ export default async function ClientProjectsPage() {
 
         <div className="flex items-center gap-3">
           <Link
-            href="/#contact"
+            href="/start-project"
             className="px-4 py-2 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white text-xs font-semibold shadow-warm-sm transition-all flex items-center gap-1.5"
           >
             <Plus className="w-3.5 h-3.5" />

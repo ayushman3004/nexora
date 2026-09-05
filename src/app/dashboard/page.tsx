@@ -277,7 +277,7 @@ export default async function ClientDashboardPage() {
                 {projectRequests.length === 0 && (
                   <div className="pt-2">
                     <Link
-                      href="/#contact"
+                      href="/start-project"
                       className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#c2652a] text-white text-xs font-semibold shadow-warm-sm hover:bg-[#a8521e] transition-all"
                     >
                       <span>Submit Project Brief</span>
@@ -301,7 +301,7 @@ export default async function ClientDashboardPage() {
                 </p>
               </div>
               <Link
-                href="/#contact"
+                href="/start-project"
                 className="text-xs text-[#c2652a] hover:underline font-semibold"
               >
                 + New Inquiry

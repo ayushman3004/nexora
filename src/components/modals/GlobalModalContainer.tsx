@@ -1,11 +1,33 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense } from "react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useModal } from "@/context/ModalContext";
 import { ProjectInquiryModal } from "./ProjectInquiryModal";
 import { ServeQDemoModal } from "./ServeQDemoModal";
 import { CaseStudyModal } from "./CaseStudyModal";
+
+function InquiryQuerySync() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const { openModal, activeModal } = useModal();
+
+  useEffect(() => {
+    if (searchParams.get("inquiry") === "true") {
+      if (activeModal !== "inquiry") {
+        openModal("inquiry");
+      }
+      const nextParams = new URLSearchParams(searchParams.toString());
+      nextParams.delete("inquiry");
+      const nextQuery = nextParams.toString();
+      router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, { scroll: false });
+    }
+  }, [searchParams, activeModal, openModal, router, pathname]);
+
+  return null;
+}
 
 export function GlobalModalContainer() {
   const { activeModal, closeModal } = useModal();
@@ -21,8 +43,12 @@ export function GlobalModalContainer() {
   }, [closeModal]);
 
   return (
-    <AnimatePresence>
-      {activeModal && (
+    <>
+      <Suspense fallback={null}>
+        <InquiryQuerySync />
+      </Suspense>
+      <AnimatePresence>
+        {activeModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
           {/* Backdrop */}
           <motion.div
@@ -47,7 +73,8 @@ export function GlobalModalContainer() {
             {activeModal === "case-study" && <CaseStudyModal />}
           </motion.div>
         </div>
-      )}
-    </AnimatePresence>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

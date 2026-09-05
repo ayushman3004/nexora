@@ -97,6 +97,15 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // 4. Project intake routes (/start-project, /inquiry) -> require authenticated user
+  if (pathname === "/start-project" || pathname === "/inquiry") {
+    if (!user) {
+      const redirectUrl = new URL("/login", request.url);
+      redirectUrl.searchParams.set("redirectTo", pathname);
+      return NextResponse.redirect(redirectUrl);
+    }
+  }
+
   return response;
 }
 
@@ -104,6 +113,8 @@ export const config = {
   matcher: [
     "/dashboard/:path*",
     "/admin/:path*",
+    "/start-project",
+    "/inquiry",
     "/login",
     "/register",
   ],

@@ -161,27 +161,27 @@ export default function AboutPage() {
 
             <div className="lg:col-span-6 grid grid-cols-2 gap-4">
               <div className="p-5 rounded-2xl bg-[#faf5ee] border border-[#d8d0c8]/80 space-y-2">
-                <div className="text-3xl font-serif font-bold text-[#c2652a]">12+</div>
-                <div className="text-xs font-bold text-[#3a302a]">Countries Served</div>
-                <p className="text-[11px] text-[#605850]">Global enterprise & venture clients</p>
+                <div className="text-3xl font-serif font-bold text-[#c2652a]">100%</div>
+                <div className="text-xs font-bold text-[#3a302a]">Founder-Led</div>
+                <p className="text-[11px] text-[#605850]">Direct collaboration with Ayushman & Ritika</p>
               </div>
 
               <div className="p-5 rounded-2xl bg-[#faf5ee] border border-[#d8d0c8]/80 space-y-2">
-                <div className="text-3xl font-serif font-bold text-[#3a302a]">4</div>
-                <div className="text-xs font-bold text-[#3a302a]">Global Studio Hubs</div>
-                <p className="text-[11px] text-[#605850]">Continuous 24/7 engineering flow</p>
+                <div className="text-3xl font-serif font-bold text-[#3a302a]">0</div>
+                <div className="text-xs font-bold text-[#3a302a]">Middlemen</div>
+                <p className="text-[11px] text-[#605850]">Zero account managers or outsourced handoffs</p>
               </div>
 
               <div className="p-5 rounded-2xl bg-[#faf5ee] border border-[#d8d0c8]/80 space-y-2">
                 <div className="text-3xl font-serif font-bold text-[#8c3c3c]">100%</div>
-                <div className="text-xs font-bold text-[#3a302a]">Senior-Led Teams</div>
-                <p className="text-[11px] text-[#605850]">Zero handoff to junior interns</p>
+                <div className="text-xs font-bold text-[#3a302a]">In-House Craft</div>
+                <p className="text-[11px] text-[#605850]">Every line of code & SEO tailored by us</p>
               </div>
 
               <div className="p-5 rounded-2xl bg-[#faf5ee] border border-[#d8d0c8]/80 space-y-2">
-                <div className="text-3xl font-serif font-bold text-[#c2652a]">99.9%</div>
-                <div className="text-xs font-bold text-[#3a302a]">Retention Rate</div>
-                <p className="text-[11px] text-[#605850]">Long-term compound client partnerships</p>
+                <div className="text-3xl font-serif font-bold text-[#c2652a]">Fast</div>
+                <div className="text-xs font-bold text-[#3a302a]">Sprint Velocity</div>
+                <p className="text-[11px] text-[#605850]">Rapid turnaround from concept to production</p>
               </div>
             </div>
           </div>
@@ -335,13 +335,13 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto space-y-3 mb-16">
             <SectionBadge icon={Globe} variant="primary">
-              GLOBAL PRESENCE
+              GLOBAL AVAILABILITY
             </SectionBadge>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-[#3a302a]">
-              Global Reach, <span className="italic text-[#c2652a]">Local Depth.</span>
+              Global Reach, <span className="italic text-[#c2652a]">Remote Agility.</span>
             </h2>
             <p className="text-sm sm:text-base text-[#605850]">
-              Our studio operates across 4 key global financial and engineering capitals.
+              Collaborating seamlessly with clients across international timezones with flexible, async-first workflows.
             </p>
           </div>
 

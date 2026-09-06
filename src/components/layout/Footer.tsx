@@ -46,7 +46,7 @@ export function Footer() {
               </p>
             </div>
 
-            <div>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-1">
               <Link
                 href="/start-project"
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#c2652a] hover:bg-[#a8521e] text-white text-xs sm:text-sm font-semibold shadow-warm-sm hover:shadow-warm-md transition-all duration-200"
@@ -54,6 +54,24 @@ export function Footer() {
                 <span>Initiate Studio Partnership</span>
                 <ArrowUpRight className="w-4 h-4" />
               </Link>
+            </div>
+
+            {/* Product Hunt Badge */}
+            <div className="pt-2">
+              <a
+                href="https://www.producthunt.com/products/grovix-studios?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-grovix-studios"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block hover:opacity-90 transition-opacity"
+              >
+                <img
+                  src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1242591&theme=light&t=1788673388968"
+                  alt="Grovix Studios - Build. Launch. Grow. | Product Hunt"
+                  width={250}
+                  height={54}
+                  style={{ width: "250px", height: "54px" }}
+                />
+              </a>
             </div>
           </div>
 

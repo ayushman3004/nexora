@@ -204,3 +204,34 @@ export async function forgotPasswordAction(formData: FormData): Promise<AuthActi
     error: "Password reset link sent! Check your email inbox.",
   };
 }
+
+export async function signInWithGoogleAction(redirectTo: string = "/dashboard"): Promise<AuthActionResult> {
+  const supabase = await createClient();
+  const headerList = await headers();
+  const host = headerList.get("host") || "localhost:3000";
+  const protocol = host.includes("localhost") ? "http" : "https";
+  const origin = `${protocol}://${host}`;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || origin;
+  const targetNext = redirectTo.startsWith("/") ? redirectTo : `/${redirectTo}`;
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: `${siteUrl}/auth/callback?next=${encodeURIComponent(targetNext)}`,
+      queryParams: {
+        access_type: "offline",
+        prompt: "consent",
+      },
+    },
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  if (data?.url) {
+    redirect(data.url);
+  }
+
+  return { error: "Failed to initiate Google authentication." };
+}

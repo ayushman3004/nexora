@@ -7,6 +7,7 @@ import Image from "next/image";
 import { registerAction } from "@/app/actions/auth";
 import { ArrowRight, Lock, Mail, User, Building, AlertCircle, CheckCircle2, Sparkles } from "lucide-react";
 import { SectionBadge } from "@/components/ui/SectionBadge";
+import { GoogleSignInButton } from "@/components/ui/GoogleSignInButton";
 
 function RegisterForm() {
   const router = useRouter();
@@ -72,6 +73,24 @@ function RegisterForm() {
               <span>{errorMessage}</span>
             </div>
           )}
+
+          {/* Google OAuth Access */}
+          <GoogleSignInButton
+            redirectTo={redirectTo}
+            text="Sign up with Google"
+            onError={(err) => setErrorMessage(err)}
+          />
+
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-[#d8d0c8]/70" />
+            </div>
+            <div className="relative flex justify-center text-xs">
+              <span className="bg-white/95 px-3 text-[#8c827a] font-medium uppercase tracking-wider text-[11px] rounded-full border border-[#d8d0c8]/60">
+                Or register with email
+              </span>
+            </div>
+          </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>

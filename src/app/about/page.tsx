@@ -47,30 +47,21 @@ export default function AboutPage() {
 
   const team = [
     {
-      name: "Elena Rostova",
-      role: "Founder & Design Director",
-      discipline: "Design Systems & Warm Minimalism",
-      bio: "Former design principal at leading Nordic studios. Elena champions disciplined typography, intentional restraint, and high-fidelity interaction architectures.",
-      focus: ["Sahara Design Language", "Design Tokens", "Typography"],
-      initials: "ER",
+      name: "Ayushman",
+      role: "Founder & Web Developer",
+      discipline: "Full-Stack Web Development & Architecture",
+      bio: "Full-stack developer and technical lead focused on building high-performance web applications, robust architectures, and intuitive digital experiences.",
+      focus: ["Full-Stack Development", "Web Architecture", "Modern Frameworks"],
+      initials: "A",
       color: "from-[#fbe8d8] to-[#f0a878]",
     },
     {
-      name: "Julian Vance",
-      role: "Head of Engineering",
-      discipline: "Distributed Systems & Cloud",
-      bio: "Veteran infrastructure architect with 14+ years building high-throughput microservices in Rust, Go, and TypeScript across fintech and AI.",
-      focus: ["Distributed Event Streams", "Zero-Downtime EKS", "Edge SSR"],
-      initials: "JV",
-      color: "from-[#f6f0e8] to-[#d8d0c8]",
-    },
-    {
-      name: "Aria Chen",
-      role: "Strategy Lead",
-      discipline: "Quantitative Growth & Analytics",
-      bio: "Data-driven strategist specializing in full-funnel attribution, programmatic organic discovery engines, and behavioral conversion optimization.",
-      focus: ["Predictive Growth Models", "Programmatic SEO", "CRO"],
-      initials: "AC",
+      name: "Ritika",
+      role: "Co-Founder, Web Developer & SEO Manager",
+      discipline: "Web Development & Search Engine Optimization",
+      bio: "Web developer and SEO strategist specializing in organic growth, technical SEO architecture, performance optimization, and data-driven user experiences.",
+      focus: ["Web Development", "Technical SEO", "Organic Growth & CRO"],
+      initials: "R",
       color: "from-[#f9ecea] to-[#f0a878]",
     },
   ];
@@ -287,7 +278,7 @@ export default function AboutPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 max-w-5xl mx-auto gap-8">
           {team.map((member, idx) => (
             <motion.div
               key={member.name}
@@ -398,7 +389,7 @@ export default function AboutPage() {
             Let&apos;s build together with <span className="italic text-[#f0a878]">warm discipline.</span>
           </h2>
           <p className="text-sm sm:text-base text-white/70 max-w-xl mx-auto leading-relaxed">
-            Reach out to Elena, Julian, or Aria directly to discuss initiating a new product build, architecture audit, or growth sprint.
+            Reach out to Ayushman or Ritika directly to discuss initiating a new product build, architecture audit, or growth sprint.
           </p>
           <div className="pt-2">
             <Link

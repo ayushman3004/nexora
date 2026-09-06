@@ -206,7 +206,7 @@ export function Footer() {
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-1.5 text-[#605850]">
               <Globe className="w-3.5 h-3.5 text-[#c2652a]" />
-              San Francisco &bull; London &bull; Zurich &bull; Tokyo
+              India
             </span>
           </div>
         </div>

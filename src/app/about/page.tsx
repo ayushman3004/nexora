@@ -53,6 +53,7 @@ export default function AboutPage() {
       bio: "Full-stack developer and technical lead focused on building high-performance web applications, robust architectures, and intuitive digital experiences.",
       focus: ["Full-Stack Development", "Web Architecture", "Modern Frameworks"],
       initials: "A",
+      image: "/images/team-ayushman.jpg",
       color: "from-[#fbe8d8] to-[#f0a878]",
     },
     {
@@ -62,6 +63,7 @@ export default function AboutPage() {
       bio: "Web developer and SEO strategist specializing in organic growth, technical SEO architecture, performance optimization, and data-driven user experiences.",
       focus: ["Web Development", "Technical SEO", "Organic Growth & CRO"],
       initials: "R",
+      image: "/images/team-ritika.jpg",
       color: "from-[#f9ecea] to-[#f0a878]",
     },
   ];
@@ -290,15 +292,39 @@ export default function AboutPage() {
             >
               <div className="space-y-4">
                 {/* Stylized Portrait Card with Hover Zoom */}
-                <div className="relative aspect-square rounded-2xl bg-gradient-to-br border border-[#d8d0c8]/60 overflow-hidden flex items-center justify-center p-6 bg-[#faf5ee]">
-                  <div className="text-center space-y-3">
-                    <div className="w-20 h-20 rounded-full bg-[#fbe8d8] text-[#c2652a] font-serif text-3xl font-bold flex items-center justify-center mx-auto shadow-warm-sm group-hover:scale-110 transition-transform duration-300">
-                      {member.initials}
+                <div className="relative aspect-square rounded-2xl border border-[#d8d0c8]/60 overflow-hidden bg-[#faf5ee] shadow-inner">
+                  {member.image ? (
+                    <>
+                      <Image
+                        src={member.image}
+                        alt={member.name}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
+                        priority
+                      />
+                      {/* Gentle warm gradient vignette overlay for editorial feel */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#2a221b]/70 via-transparent to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-300" />
+
+                      {/* Floating discipline badge */}
+                      <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+                        <span className="px-2.5 py-1 rounded-full text-[10px] font-mono tracking-wide bg-[#faf5ee]/95 backdrop-blur-md text-[#3a302a] border border-[#d8d0c8]/80 shadow-sm">
+                          {member.discipline}
+                        </span>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="flex items-center justify-center h-full p-6">
+                      <div className="text-center space-y-3">
+                        <div className="w-20 h-20 rounded-full bg-[#fbe8d8] text-[#c2652a] font-serif text-3xl font-bold flex items-center justify-center mx-auto shadow-warm-sm group-hover:scale-110 transition-transform duration-300">
+                          {member.initials}
+                        </div>
+                        <div className="text-xs font-mono text-[#8c827a] tracking-wider">
+                          {member.discipline}
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-xs font-mono text-[#8c827a] tracking-wider">
-                      {member.discipline}
-                    </div>
-                  </div>
+                  )}
                 </div>
 
                 <div>
